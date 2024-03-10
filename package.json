@@ -1,0 +1,27 @@
+{
+  "name": "flat-internationalized-date",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Eduard Predescu",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "dts-bundle": "^0.7.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "vite": "^5.1.5",
+    "vite-plugin-dts": "^3.7.3",
+    "vitest": "^1.3.1"
+  },
+  "dependencies": {
+    "typescript": "^5.4.2"
+  }
+}
