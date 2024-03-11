@@ -15,7 +15,7 @@
 
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
-import { copy, mod, Mutable } from "../utils";
+import { mod } from "../utils";
 
 const EPOCH = 1721426; // 001/01/03 Julian C.E.
 export function gregorianToJulianDay(
@@ -135,8 +135,8 @@ function isInverseEra(date: AnyCalendarDate): boolean {
   return date.era === "BC";
 }
 
-function balanceDate(date: Mutable<AnyCalendarDate>) {
-  let newDate = Object.assign({}, copy(date));
+function balanceDate(date: AnyCalendarDate) {
+  let newDate = Object.assign({}, date);
   if (date.year <= 0) {
     newDate = Object.assign({}, newDate, {
       era: date.era === "BC" ? "AD" : "BC",

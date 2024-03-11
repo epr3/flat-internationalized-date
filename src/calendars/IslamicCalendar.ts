@@ -171,27 +171,27 @@ function umalquraYearLength(year: number): number {
 export const IslamicUmalquraCalendar = {
   ...IslamicCivilCalendar,
   name: "islamic-umalqura",
+  constructCalendar() {
+    if (!UMALQURA_MONTHLENGTH) {
+      UMALQURA_MONTHLENGTH = new Uint16Array(
+        Uint8Array.from(atob(UMALQURA_DATA), (c) => c.charCodeAt(0)).buffer
+      );
+    }
 
-  // TODO: special case for create calendar
-  // constructor() {
-  //     super();
-  //     if (!UMALQURA_MONTHLENGTH) {
-  //         UMALQURA_MONTHLENGTH = new Uint16Array(Uint8Array.from(atob(UMALQURA_DATA), c => c.charCodeAt(0)).buffer);
-  //     }
+    if (!UMALQURA_YEAR_START_TABLE) {
+      UMALQURA_YEAR_START_TABLE = new Uint32Array(
+        UMALQURA_YEAR_END - UMALQURA_YEAR_START + 1
+      );
 
-  //     if (!UMALQURA_YEAR_START_TABLE) {
-  //         UMALQURA_YEAR_START_TABLE = new Uint32Array(UMALQURA_YEAR_END - UMALQURA_YEAR_START + 1);
-
-  //         let yearStart = 0;
-  //         for (let year = UMALQURA_YEAR_START; year <= UMALQURA_YEAR_END; year++) {
-  //             UMALQURA_YEAR_START_TABLE[year - UMALQURA_YEAR_START] = yearStart;
-  //             for (let i = 1; i <= 12; i++) {
-  //                 yearStart += umalquraMonthLength(year, i);
-  //             }
-  //         }
-  //     }
-  // },
-
+      let yearStart = 0;
+      for (let year = UMALQURA_YEAR_START; year <= UMALQURA_YEAR_END; year++) {
+        UMALQURA_YEAR_START_TABLE[year - UMALQURA_YEAR_START] = yearStart;
+        for (let i = 1; i <= 12; i++) {
+          yearStart += umalquraMonthLength(year, i);
+        }
+      }
+    }
+  },
   fromJulianDay(jd: number): CalendarDate {
     const days = jd - CIVIL_EPOC;
     const startDays = umalquraYearStart(UMALQURA_YEAR_START);
