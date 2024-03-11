@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { AnyTime } from ".";
+import { IslamicUmalquraCalendar } from ".";
 import { constrain, constrainTime } from "./manipulation";
 
 // function shiftArgs(args: any[]) {
@@ -47,12 +47,16 @@ export function createCalendarDate({
   day: number;
 }): CalendarDate {
   const calendarObj: CalendarDate = {
-    calendar: calendar ?? "gregory",
+    calendar: calendar ?? "gregorian",
     era,
     year,
     month,
     day,
   };
+
+  if (calendar === "islamic-umalqura")
+    IslamicUmalquraCalendar.constructCalendar();
+
   return Object.assign({}, constrain(calendarObj)) as CalendarDate;
 }
 
@@ -120,7 +124,7 @@ export function createZonedDateTime({
   second?: number;
   millisecond?: number;
   timezone: string;
-  offset: number;
+  offset?: number;
 }): ZonedDateTime {
   return constrain(
     Object.assign(
@@ -138,7 +142,7 @@ export function createZonedDateTime({
       }),
       {
         timezone,
-        offset,
+        offset: offset ?? 0,
       }
     )
   ) as ZonedDateTime;
@@ -149,7 +153,12 @@ export const createTime = ({
   minute,
   second,
   millisecond,
-}: AnyTime): Time => {
+}: {
+  hour?: number;
+  minute?: number;
+  second?: number;
+  millisecond?: number;
+}): Time => {
   return constrainTime(
     Object.assign(
       {},
