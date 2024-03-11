@@ -31,7 +31,12 @@ import {
   toTimeZone,
   zonedToDate,
 } from "./conversion";
-import { getLocalTimeZone } from "./queries";
+import {
+  getLocalTimeZone,
+  isCalendarDateTime,
+  isTime,
+  isZonedDateTime,
+} from "./queries";
 import { GregorianCalendar } from "./calendars/GregorianCalendar";
 import { calendars } from "./calendars";
 
@@ -348,20 +353,16 @@ export function parseDuration(value: string): Required<DateTimeDuration> {
 export function temporalToString(
   date: Time | CalendarDate | CalendarDateTime | ZonedDateTime
 ): string {
-  if (!("day" in date)) {
+  if (isTime(date)) {
     return timeToString(date);
   }
 
-  if (
-    "hour" in date ||
-    "minute" in date ||
-    "second" in date ||
-    "millisecond" in date
-  ) {
-    if ("timezone" in date) {
-      return zonedDateTimeToString(date as ZonedDateTime);
-    }
-    return dateTimeToString(date as CalendarDateTime);
+  if (isZonedDateTime(date)) {
+    return zonedDateTimeToString(date);
+  }
+
+  if (isCalendarDateTime(date)) {
+    return dateTimeToString(date);
   }
 
   return dateToString(date);

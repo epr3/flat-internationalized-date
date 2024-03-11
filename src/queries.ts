@@ -284,19 +284,22 @@ export function getWeeksInMonth(date: DateValue, locale: string): number {
 }
 
 export function compare(a: DateValue | Time, b: DateValue | Time): number {
-  if ("timezone" in a) {
-    if ("timezone" in b)
+  if (isZonedDateTime(a)) {
+    if (isZonedDateTime(b))
       return toDate(a, a.timezone).getTime() - toDate(b, b.timezone).getTime();
-    else if ("hour" in b && "year" in b)
+    else if (isCalendarDateTime(b))
       return toDate(a, a.timezone).getTime() - toDate(b, a.timezone).getTime();
-    else throw new Error("Cannot compare a Time value with a ZonedDateTime");
+    else throw new Error("Cannot compare a ZonedDateTime with a Time value");
   }
 
   let res = 0;
-  if ("year" in a && "year" in b) {
+  if (isCalendarDate(a) && isCalendarDate(b)) {
     res = compareDate(a, b);
   }
-  if ("hour" in a && "hour" in b && res === 0) {
+  if (
+    (isCalendarDateTime(a) && isCalendarDateTime(b) && res === 0) ||
+    (isTime(a) && isTime(b))
+  ) {
     return compareTime(a, b);
   }
 
@@ -370,4 +373,31 @@ export function isWeekend(date: DateValue, locale: string): boolean {
 /** Returns whether the given date is on a weekday in the given locale. */
 export function isWeekday(date: DateValue, locale: string): boolean {
   return !isWeekend(date, locale);
+}
+
+export function isCalendarDate(date: object): date is CalendarDate {
+  return "year" in date && "month" in date && "day" in date;
+}
+
+export function isCalendarDateTime(date: object): date is CalendarDateTime {
+  return (
+    isCalendarDate(date) &&
+    "hour" in date &&
+    "minute" in date &&
+    "second" in date &&
+    "millisecond" in date
+  );
+}
+
+export function isZonedDateTime(date: object): date is ZonedDateTime {
+  return isCalendarDateTime(date) && "timezone" in date;
+}
+
+export function isTime(date: object): date is Time {
+  return (
+    "hour" in date &&
+    "minute" in date &&
+    "second" in date &&
+    !isCalendarDate(date)
+  );
 }
