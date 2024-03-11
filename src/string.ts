@@ -29,10 +29,10 @@ import {
   toCalendar,
   toCalendarDateTime,
   toTimeZone,
+  zonedToDate,
 } from "./conversion";
 import { getLocalTimeZone } from "./queries";
 import { GregorianCalendar } from "./calendars/GregorianCalendar";
-import { Mutable } from "./utils";
 import { calendars } from "./calendars";
 
 const TIME_RE = /^(\d{2})(?::(\d{2}))?(?::(\d{2}))?(\.\d+)?$/;
@@ -94,7 +94,7 @@ export function parseDateTime(value: string): CalendarDateTime {
     throw new Error("Invalid ISO 8601 date time string: " + value);
   }
 
-  const date: Mutable<CalendarDateTime> = createCalendarDateTime({
+  const date: CalendarDateTime = createCalendarDateTime({
     year: parseNumber(m[1], 1, 9999),
     month: parseNumber(m[2], 1, 12),
     day: 1,
@@ -246,6 +246,10 @@ export function dateTimeToString(date: AnyDateTime): string {
   return `${dateToString(date)}T${timeToString(date)}`;
 }
 
+export function toAbsoluteString(date: ZonedDateTime): string {
+  return zonedToDate(date).toISOString();
+}
+
 function offsetToString(offset: number) {
   const sign = Math.sign(offset) < 0 ? "-" : "+";
   offset = Math.abs(offset);
@@ -308,7 +312,7 @@ export function parseDuration(value: string): Required<DateTimeDuration> {
     }
   }
 
-  const duration: Mutable<DateTimeDuration> = {
+  const duration: DateTimeDuration = {
     years: parseDurationGroup(match.groups?.years, isNegative, 0, 9999),
     months: parseDurationGroup(match.groups?.months, isNegative, 0, 12),
     weeks: parseDurationGroup(match.groups?.weeks, isNegative, 0, Infinity),
@@ -339,4 +343,26 @@ export function parseDuration(value: string): Required<DateTimeDuration> {
   }
 
   return duration as Required<DateTimeDuration>;
+}
+
+export function temporalToString(
+  date: Time | CalendarDate | CalendarDateTime | ZonedDateTime
+): string {
+  if (!("day" in date)) {
+    return timeToString(date);
+  }
+
+  if (
+    "hour" in date ||
+    "minute" in date ||
+    "second" in date ||
+    "millisecond" in date
+  ) {
+    if ("timezone" in date) {
+      return zonedDateTimeToString(date as ZonedDateTime);
+    }
+    return dateTimeToString(date as CalendarDateTime);
+  }
+
+  return dateToString(date);
 }

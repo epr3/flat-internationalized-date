@@ -11,53 +11,67 @@
  */
 
 import {
-  CalendarDate,
-  CalendarDateTime,
   parseAbsolute,
   parseDate,
   parseDateTime,
   parseDuration,
   parseTime,
   parseZonedDateTime,
-  Time,
-  ZonedDateTime,
+  temporalToString,
+  toAbsoluteString,
 } from "..";
 
 import { describe, it, expect } from "vitest";
+import {
+  createCalendarDate,
+  createCalendarDateTime,
+  createTime,
+  createZonedDateTime,
+} from "../src/CalendarDate";
 
 describe("string conversion", function () {
   describe("parseTime", function () {
     it("should parse a time with only hours", function () {
       const time = parseTime("14");
-      const expected = new Time(14);
+      const expected = createTime({ hour: 14 });
       expect(time).toEqual(expected);
     });
 
     it("should parse a padded time with only hours", function () {
       const time = parseTime("04");
-      const expected = new Time(4);
+      const expected = createTime({ hour: 4 });
       expect(time).toEqual(expected);
     });
 
     it("should parse a time with hours and minutes", function () {
       const time = parseTime("14:05");
-      const expected = new Time(14, 5);
+      const expected = createTime({ hour: 14, minute: 5 });
       expect(time).toEqual(expected);
     });
 
     it("should parse a time with hours, minutes, and seconds", function () {
       const time = parseTime("14:05:25");
-      const expected = new Time(14, 5, 25);
+      const expected = createTime({ hour: 14, minute: 5, second: 25 });
       expect(time).toEqual(expected);
     });
 
     it("should parse a time with hours, minutes, seconds, and milliseconds", function () {
       let time = parseTime("14:05:25.1");
-      let expected = new Time(14, 5, 25, 100);
+      let expected = createTime({
+        hour: 14,
+        minute: 5,
+        second: 25,
+        millisecond: 100,
+      });
       expect(time).toEqual(expected);
 
       time = parseTime("14:05:25.12");
-      expected = new Time(14, 5, 25, 120);
+      expected = createTime({
+        hour: 14,
+        minute: 5,
+        second: 25,
+        millisecond: 120,
+      });
       expect(time).toEqual(expected);
     });
 
@@ -75,34 +89,39 @@ describe("string conversion", function () {
 
   describe("Time#toString", function () {
     it("should stringify a time", function () {
-      const time = new Time(14, 45, 25);
-      expect(time.toString()).toBe("14:45:25");
+      const time = createTime({ hour: 14, minute: 45, second: 25 });
+      expect(temporalToString(time)).toBe("14:45:25");
     });
 
     it("should stringify a time with padding", function () {
-      const time = new Time(4, 5, 25);
-      expect(time.toString()).toBe("04:05:25");
+      const time = createTime({ hour: 4, minute: 5, second: 25 });
+      expect(temporalToString(time)).toBe("04:05:25");
     });
 
     it("should stringify a time milliseconds", function () {
-      let time = new Time(4, 5, 25, 100);
-      expect(time.toString()).toBe("04:05:25.1");
+      let time = createTime({
+        hour: 4,
+        minute: 5,
+        second: 25,
+        millisecond: 100,
+      });
+      expect(temporalToString(time)).toBe("04:05:25.1");
 
-      time = new Time(4, 5, 25, 120);
-      expect(time.toString()).toBe("04:05:25.12");
+      time = createTime({ hour: 4, minute: 5, second: 25, millisecond: 120 });
+      expect(temporalToString(time)).toBe("04:05:25.12");
     });
   });
 
   describe("parseDate", function () {
     it("should parse a date", function () {
       const date = parseDate("2020-02-03");
-      const expected = new CalendarDate(2020, 2, 3);
+      const expected = createCalendarDate({ year: 2020, month: 2, day: 3 });
       expect(date).toEqual(expected);
     });
 
     it("should parse a padded date", function () {
       const date = parseDate("0128-02-03");
-      const expected = new CalendarDate(128, 2, 3);
+      const expected = createCalendarDate({ year: 128, month: 2, day: 3 });
       expect(date).toEqual(expected);
     });
 
@@ -127,44 +146,76 @@ describe("string conversion", function () {
 
   describe("CalendarDate#toString", function () {
     it("should stringify a date", function () {
-      const date = new CalendarDate(2020, 11, 20);
-      expect(date.toString()).toBe("2020-11-20");
+      const date = createCalendarDate({ year: 2020, month: 11, day: 20 });
+      expect(temporalToString(date)).toBe("2020-11-20");
     });
 
     it("should stringify a date with padding", function () {
-      const date = new CalendarDate(123, 2, 3);
-      expect(date.toString()).toBe("0123-02-03");
+      const date = createCalendarDate({ year: 123, month: 2, day: 3 });
+      expect(temporalToString(date)).toBe("0123-02-03");
     });
   });
 
   describe("parseDateTime", function () {
     it("should parse a date without a time", function () {
       const date = parseDateTime("2020-02-03");
-      const expected = new CalendarDateTime(2020, 2, 3);
+      const expected = createCalendarDateTime({ year: 2020, month: 2, day: 3 });
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with a time", function () {
       const date = parseDateTime("2020-02-03T12:23:24.12");
-      const expected = new CalendarDateTime(2020, 2, 3, 12, 23, 24, 120);
+      const expected = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 23,
+        second: 24,
+        millisecond: 120,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with only hours", function () {
       const date = parseDateTime("2020-02-03T12");
-      const expected = new CalendarDateTime(2020, 2, 3, 12, 0, 0, 0);
+      const expected = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with only hours and minutes", function () {
       const date = parseDateTime("2020-02-03T12:24");
-      const expected = new CalendarDateTime(2020, 2, 3, 12, 24, 0, 0);
+      const expected = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 24,
+        second: 0,
+        millisecond: 0,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with only hours, minutes, and seconds", function () {
       const date = parseDateTime("2020-02-03T12:24:45");
-      const expected = new CalendarDateTime(2020, 2, 3, 12, 24, 45, 0);
+      const expected = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 24,
+        second: 45,
+        millisecond: 0,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -193,31 +244,46 @@ describe("string conversion", function () {
 
   describe("CalendarDateTime#toString", function () {
     it("should stringify a date with a zero time", function () {
-      const date = new CalendarDateTime(2020, 2, 3);
-      expect(date.toString()).toBe("2020-02-03T00:00:00");
+      const date = createCalendarDateTime({ year: 2020, month: 2, day: 3 });
+      expect(temporalToString(date)).toBe("2020-02-03T00:00:00");
     });
 
     it("should stringify a date with a time", function () {
-      const date = new CalendarDateTime(2020, 2, 3, 12, 23, 45);
-      expect(date.toString()).toBe("2020-02-03T12:23:45");
+      const date = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 23,
+        second: 45,
+      });
+      expect(temporalToString(date)).toBe("2020-02-03T12:23:45");
     });
 
     it("should stringify a date with a time and milliseconds", function () {
-      const date = new CalendarDateTime(2020, 2, 3, 12, 23, 45, 120);
-      expect(date.toString()).toBe("2020-02-03T12:23:45.12");
+      const date = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 12,
+        minute: 23,
+        second: 45,
+        millisecond: 120,
+      });
+      expect(temporalToString(date)).toBe("2020-02-03T12:23:45.12");
     });
   });
 
   describe("parseZonedDateTime", function () {
     it("should parse a date without a time or offset", function () {
       const date = parseZonedDateTime("2020-02-03[America/Los_Angeles]");
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -225,16 +291,16 @@ describe("string conversion", function () {
       const date = parseZonedDateTime(
         "2020-02-03T12:24:45[America/Los_Angeles]"
       );
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -242,17 +308,17 @@ describe("string conversion", function () {
       const date = parseZonedDateTime(
         "2020-02-03T12:24:45.12[America/Los_Angeles]"
       );
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45,
-        120
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+        millisecond: 120,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -260,16 +326,16 @@ describe("string conversion", function () {
       const date = parseZonedDateTime(
         "2020-02-03T12:24:45-08[America/Los_Angeles]"
       );
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -277,48 +343,57 @@ describe("string conversion", function () {
       let date = parseZonedDateTime(
         "2020-02-03T12:24:45-08:00[America/Los_Angeles]"
       );
-      let expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
+      let expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime(
         "2020-02-03T12:24:45-0800[America/Los_Angeles]"
       );
-      expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
+      expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime("2020-02-03T12:24:45-08[America/Los_Angeles]");
-      expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
+      expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime("2020-02-03T12:24:45+0000[UTC]");
-      expected = new ZonedDateTime(2020, 2, 3, "UTC", 0, 12, 24, 45);
+      expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "UTC",
+        offset: 0,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -326,45 +401,46 @@ describe("string conversion", function () {
       const date = parseZonedDateTime(
         "2020-02-03T12:24:45.12-08:00[America/Los_Angeles]"
       );
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45,
-        120
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+        millisecond: 120,
+      });
+
       expect(date).toEqual(expected);
     });
 
     it("should disambiguate ambiguous times without an offset", function () {
       let date = parseZonedDateTime("2020-11-01T01:00[America/Los_Angeles]");
-      let expected = new ZonedDateTime(
-        2020,
-        11,
-        1,
-        "America/Los_Angeles",
-        -25200000,
-        1,
-        0,
-        0
-      );
+      let expected = createZonedDateTime({
+        year: 2020,
+        month: 11,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime("2021-03-14T02:00[America/Los_Angeles]");
-      expected = new ZonedDateTime(
-        2021,
-        3,
-        14,
-        "America/Los_Angeles",
-        -25200000,
-        3,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 3,
+        day: 14,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 3,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -373,32 +449,32 @@ describe("string conversion", function () {
         "2020-11-01T01:00[America/Los_Angeles]",
         "later"
       );
-      let expected = new ZonedDateTime(
-        2020,
-        11,
-        1,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      let expected = createZonedDateTime({
+        year: 2020,
+        month: 11,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime(
         "2021-03-14T02:00[America/Los_Angeles]",
         "earlier"
       );
-      expected = new ZonedDateTime(
-        2021,
-        3,
-        14,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 3,
+        day: 14,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -406,29 +482,29 @@ describe("string conversion", function () {
       let date = parseZonedDateTime(
         "2020-11-01T01:00-08:00[America/Los_Angeles]"
       );
-      let expected = new ZonedDateTime(
-        2020,
-        11,
-        1,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      let expected = createZonedDateTime({
+        year: 2020,
+        month: 11,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseZonedDateTime("2020-11-01T01:00-07:00[America/Los_Angeles]");
-      expected = new ZonedDateTime(
-        2020,
-        11,
-        1,
-        "America/Los_Angeles",
-        -25200000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2020,
+        month: 11,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -474,34 +550,35 @@ describe("string conversion", function () {
 
   describe("ZonedDateTime#toString", function () {
     it("should stringify a date", function () {
-      const date = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45
-      );
-      expect(date.toString()).toBe(
+      const date = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+      });
+      expect(temporalToString(date)).toBe(
         "2020-02-03T12:24:45-08:00[America/Los_Angeles]"
       );
     });
 
     it("should stringify a date with milliseconds", function () {
-      const date = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        12,
-        24,
-        45,
-        120
-      );
-      expect(date.toString()).toBe(
+      const date = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 12,
+        minute: 24,
+        second: 45,
+        millisecond: 120,
+      });
+
+      expect(temporalToString(date)).toBe(
         "2020-02-03T12:24:45.12-08:00[America/Los_Angeles]"
       );
     });
@@ -510,41 +587,42 @@ describe("string conversion", function () {
   describe("parseAbsolute", function () {
     it("should parse a date without a time", function () {
       const date = parseAbsolute("2020-02-03Z", "America/Los_Angeles");
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        2,
-        "America/Los_Angeles",
-        -28800000,
-        16
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 2,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 16,
+      });
+
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with an offset but no time", function () {
       const date = parseAbsolute("2020-02-03-08:00", "America/Los_Angeles");
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should parse a date with a time", function () {
       const date = parseAbsolute("2020-02-03T22:32:45Z", "America/Los_Angeles");
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        14,
-        32,
-        45
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 14,
+        minute: 32,
+        second: 45,
+      });
       expect(date).toEqual(expected);
     });
 
@@ -553,127 +631,143 @@ describe("string conversion", function () {
         "2020-02-03T22:32:45-08:00",
         "America/Los_Angeles"
       );
-      const expected = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        22,
-        32,
-        45
-      );
+      const expected = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 22,
+        minute: 32,
+        second: 45,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should handle daylight saving time", function () {
       let date = parseAbsolute("2021-03-14T02:00-08:00", "America/Los_Angeles");
-      let expected = new ZonedDateTime(
-        2021,
-        3,
-        14,
-        "America/Los_Angeles",
-        -25200000,
-        3,
-        0,
-        0
-      );
+      let expected = createZonedDateTime({
+        year: 2021,
+        month: 3,
+        day: 14,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 3,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseAbsolute("2021-11-07T01:00-07:00", "America/Los_Angeles");
-      expected = new ZonedDateTime(
-        2021,
-        11,
-        7,
-        "America/Los_Angeles",
-        -25200000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 7,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseAbsolute("2021-11-07T01:00-08:00", "America/Los_Angeles");
-      expected = new ZonedDateTime(
-        2021,
-        11,
-        7,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 7,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseAbsolute("2021-11-07T01:00-0800", "America/Los_Angeles");
-      expected = new ZonedDateTime(
-        2021,
-        11,
-        7,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 7,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseAbsolute("2021-11-07T01:00-08", "America/Los_Angeles");
-      expected = new ZonedDateTime(
-        2021,
-        11,
-        7,
-        "America/Los_Angeles",
-        -28800000,
-        1,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 7,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
 
       date = parseAbsolute("2021-11-07T01:00+0000", "America/Los_Angeles");
-      expected = new ZonedDateTime(
-        2021,
-        11,
-        6,
-        "America/Los_Angeles",
-        -25200000,
-        18,
-        0,
-        0
-      );
+      expected = createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 6,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 18,
+        minute: 0,
+        second: 0,
+      });
       expect(date).toEqual(expected);
     });
 
     it("should error if missing offset or Z", function () {
-      expect(() => parseAbsolute("2020-02-03")).toThrow();
+      expect(() =>
+        parseAbsolute("2020-02-03", "America/Los_Angeles")
+      ).toThrow();
     });
 
     it("should error if components are out of range", function () {
-      expect(() => parseAbsolute("2020-00-03Z")).toThrow();
-      expect(() => parseAbsolute("2020-13-03Z")).toThrow();
-      expect(() => parseAbsolute("2020-01-32Z")).toThrow();
-      expect(() => parseAbsolute("2020-02-30Z")).toThrow();
-      expect(() => parseAbsolute("2020-02-03T33:00Z")).toThrow();
-      expect(() => parseAbsolute("2020-02-03T23:99Z")).toThrow();
-      expect(() => parseAbsolute("2020-02-03T12:22:99Z")).toThrow();
+      expect(() =>
+        parseAbsolute("2020-00-03Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-13-03Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-01-32Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-02-30Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-02-03T33:00Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-02-03T23:99Z", "America/Los_Angeles")
+      ).toThrow();
+      expect(() =>
+        parseAbsolute("2020-02-03T12:22:99Z", "America/Los_Angeles")
+      ).toThrow();
     });
   });
 
   describe("ZonedDateTime#toAbsoluteString", function () {
     it("should stringify a date", function () {
-      const date = new ZonedDateTime(
-        2020,
-        2,
-        3,
-        "America/Los_Angeles",
-        -28800000,
-        14,
-        32,
-        45
-      );
-      expect(date.toAbsoluteString()).toBe("2020-02-03T22:32:45.000Z");
+      const date = createZonedDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 14,
+        minute: 32,
+        second: 45,
+      });
+      expect(toAbsoluteString(date)).toBe("2020-02-03T22:32:45.000Z");
     });
   });
 
