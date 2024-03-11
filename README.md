@@ -1,6 +1,6 @@
 ### Flat Internationalized Date
 
-This library is a fork of (@internationalized/date)[https://github.com/adobe/react-spectrum/tree/main/packages/%40internationalized/date] by Adobe.
+This library is a fork of [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/%40internationalized/date) by Adobe.
 
 Most of the functionality has been ported over from `@internationalized/date`
 
