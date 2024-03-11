@@ -40,6 +40,7 @@ import {
 } from "./conversion";
 import { GregorianCalendar } from "./calendars/GregorianCalendar";
 import { calendars } from "./calendars";
+import { compare } from "./queries";
 
 const ONE_HOUR = 3600000;
 

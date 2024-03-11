@@ -11,22 +11,23 @@
  */
 
 import { DateFormatter } from "..";
-import { describe, it, beforeAll, expect } from "vitest";
+import { describe, it, beforeAll, expect, vi } from "vitest";
 
 describe("DateFormatter", function () {
   beforeAll(function () {
     // Mock to ensure buggy WebKit behavior
     const resolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
-    jest
-      .spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions")
-      .mockImplementation(function () {
-        const s = resolvedOptions.call(this);
-        if (s.locale === "fr" && s.hour12 === false) {
-          s.hour12 = true;
-          s.hourCycle = "h12";
-        }
-        return s;
-      });
+    vi.spyOn(
+      Intl.DateTimeFormat.prototype,
+      "resolvedOptions"
+    ).mockImplementation(function () {
+      const s = resolvedOptions.call(this as unknown);
+      if (s.locale === "fr" && s.hour12 === false) {
+        s.hour12 = true;
+        s.hourCycle = "h12";
+      }
+      return s;
+    });
   });
 
   it("should format a basic date", function () {

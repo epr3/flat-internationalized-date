@@ -32,6 +32,7 @@ import {
   toTime,
   ZonedDateTime,
 } from "..";
+import { createCalendarDateTime } from "../src/CalendarDate";
 import {
   fromAbsolute,
   possibleAbsolutes,
@@ -44,14 +45,24 @@ import { describe, it, expect } from "vitest";
 describe("CalendarDate conversion", function () {
   describe("toAbsolute", function () {
     it("should handle a normal date", function () {
-      const date = new CalendarDateTime(2020, 2, 3, 2);
+      const date = createCalendarDateTime({
+        year: 2020,
+        month: 2,
+        day: 3,
+        hour: 2,
+      });
       expect(toAbsolute(date, "America/Los_Angeles")).toBe(
         new Date("2020-02-03T10:00Z").getTime()
       );
     });
 
     it("should handle daylight saving time start", function () {
-      const date = new CalendarDateTime(2020, 3, 8, 2);
+      const date = createCalendarDateTime({
+        year: 2020,
+        month: 3,
+        day: 8,
+        hour: 2,
+      });
       expect(toAbsolute(date, "America/Los_Angeles")).toBe(
         new Date("2020-03-08T10:00Z").getTime()
       );

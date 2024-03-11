@@ -50,7 +50,7 @@ export {
   EthiopicAmeteAlemCalendar,
   CopticCalendar,
 } from "./calendars/EthiopicCalendar";
-export { createCalendar } from "./createCalendar";
+
 export {
   toCalendarDate,
   toCalendarDateTime,
@@ -97,5 +97,7 @@ export {
   parseAbsoluteToLocal,
   parseZonedDateTime,
   parseDuration,
+  toAbsoluteString,
+  temporalToString,
 } from "./string";
 export { DateFormatter } from "./DateFormatter";
