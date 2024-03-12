@@ -193,7 +193,7 @@ export const CopticCalendar = {
   },
 
   balanceDate(date: AnyCalendarDate) {
-    let newDate = Object.assign({}, copy(date));
+    let newDate = Object.assign({}, date);
     if (newDate.year <= 0) {
       newDate = Object.assign({}, newDate, {
         year: 1 - newDate.year,

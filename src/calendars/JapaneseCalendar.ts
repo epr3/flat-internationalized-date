@@ -16,7 +16,6 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { GregorianCalendar } from "./GregorianCalendar";
-import { copy } from "../utils";
 
 const ERA_START_DATES = [
   [1868, 9, 8],
@@ -83,10 +82,11 @@ function getMinimums(date: AnyCalendarDate) {
 }
 
 function constrainDate(date: AnyCalendarDate) {
-  let newDate = Object.assign({}, copy(date));
+  let newDate = Object.assign({}, date);
   const idx = ERA_NAMES.indexOf(date.era!);
   const end = ERA_END_DATES[idx];
-  if (end !== null) {
+  console.log(idx);
+  if (end) {
     const [endYear, endMonth, endDay] = end;
 
     // Constrain the year to the maximum possible value in the era.
@@ -134,7 +134,7 @@ export const JapaneseCalendar: Calendar = {
   name: "japanese",
 
   fromJulianDay(jd: number): CalendarDate {
-    const date = super.fromJulianDay(jd);
+    const date = GregorianCalendar.fromJulianDay(jd);
     const era = findEraFromGregorianDate(date);
 
     return createCalendarDate({
@@ -151,7 +151,7 @@ export const JapaneseCalendar: Calendar = {
   },
 
   balanceDate(date: AnyCalendarDate) {
-    let newDate = Object.assign({}, copy(date));
+    let newDate = Object.assign({}, date);
     const gregorianDate = toGregorian(date);
     const era = findEraFromGregorianDate(gregorianDate);
 
@@ -195,7 +195,7 @@ export const JapaneseCalendar: Calendar = {
   },
 
   getDaysInMonth(date: AnyCalendarDate): number {
-    return super.getDaysInMonth(toGregorian(date));
+    return GregorianCalendar.getDaysInMonth(toGregorian(date));
   },
 
   getMinimumMonthInYear(date: AnyCalendarDate): number {

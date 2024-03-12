@@ -20,7 +20,6 @@ import {
   getExtendedYear,
   GregorianCalendar,
 } from "./GregorianCalendar";
-import { copy } from "../utils";
 
 const TAIWAN_ERA_START = 1911;
 
@@ -59,8 +58,8 @@ export const TaiwanCalendar = {
   name: "roc", // Republic of China
 
   fromJulianDay(jd: number): CalendarDate {
-    const date = super.fromJulianDay(jd);
-    const extendedYear = getExtendedYear(date.era, date.year);
+    const date = GregorianCalendar.fromJulianDay(jd);
+    const extendedYear = getExtendedYear(date.era!, date.year);
     const [era, year] = gregorianToTaiwan(extendedYear);
     return createCalendarDate({
       calendar: "roc",
@@ -82,7 +81,7 @@ export const TaiwanCalendar = {
   balanceDate(date: AnyCalendarDate) {
     const [era, year] = gregorianToTaiwan(gregorianYear(date));
 
-    return Object.assign({}, copy(date), { era, year });
+    return Object.assign({}, date, { era, year });
   },
 
   isInverseEra(date: AnyCalendarDate): boolean {

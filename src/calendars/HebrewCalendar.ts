@@ -15,7 +15,7 @@
 
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
-import { copy, mod } from "../utils";
+import { mod } from "../utils";
 import { GregorianCalendar } from "./GregorianCalendar";
 
 const HEBREW_EPOCH = 347997;
@@ -198,7 +198,7 @@ export const HebrewCalendar = {
   },
 
   balanceYearMonth(date: AnyCalendarDate, previousDate: AnyCalendarDate) {
-    let newDate = Object.assign({}, copy(date));
+    let newDate = Object.assign({}, date);
     // Keep date in the same month when switching between leap years and non leap years
     if (previousDate.year !== date.year) {
       if (

@@ -197,7 +197,7 @@ export const IslamicUmalquraCalendar = {
     const startDays = umalquraYearStart(UMALQURA_YEAR_START);
     const endDays = umalquraYearStart(UMALQURA_YEAR_END);
     if (days < startDays || days > endDays) {
-      return super.fromJulianDay(jd);
+      return IslamicCivilCalendar.fromJulianDay(jd);
     } else {
       let y = UMALQURA_YEAR_START - 1;
       let m = 1;
@@ -232,7 +232,7 @@ export const IslamicUmalquraCalendar = {
 
   toJulianDay(date: AnyCalendarDate): number {
     if (date.year < UMALQURA_YEAR_START || date.year > UMALQURA_YEAR_END) {
-      return super.toJulianDay(date);
+      return IslamicCivilCalendar.toJulianDay(date);
     }
 
     return (
@@ -242,7 +242,7 @@ export const IslamicUmalquraCalendar = {
 
   getDaysInMonth(date: AnyCalendarDate): number {
     if (date.year < UMALQURA_YEAR_START || date.year > UMALQURA_YEAR_END) {
-      return super.getDaysInMonth(date);
+      return IslamicCivilCalendar.getDaysInMonth(date);
     }
 
     return umalquraMonthLength(date.year, date.month);
@@ -250,7 +250,7 @@ export const IslamicUmalquraCalendar = {
 
   getDaysInYear(date: AnyCalendarDate): number {
     if (date.year < UMALQURA_YEAR_START || date.year > UMALQURA_YEAR_END) {
-      return super.getDaysInYear(date);
+      return IslamicCivilCalendar.getDaysInYear(date);
     }
 
     return umalquraYearLength(date.year);
