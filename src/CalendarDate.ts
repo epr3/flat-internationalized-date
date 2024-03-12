@@ -11,6 +11,7 @@
  */
 
 import { IslamicUmalquraCalendar } from ".";
+import { calendars } from "./calendars";
 import { constrain, constrainTime } from "./manipulation";
 
 // function shiftArgs(args: any[]) {
@@ -46,7 +47,7 @@ export function createCalendarDate({
   month: number;
   day: number;
 }): CalendarDate {
-  const calendarObj: CalendarDate = {
+  let calendarObj: CalendarDate = {
     calendar: calendar ?? "gregorian",
     era,
     year,
@@ -56,6 +57,13 @@ export function createCalendarDate({
 
   if (calendar === "islamic-umalqura")
     IslamicUmalquraCalendar.constructCalendar();
+
+  if (!calendarObj.era) {
+    const eras = calendars[calendarObj.calendar].getEras();
+    calendarObj = Object.assign({}, calendarObj, {
+      era: eras[eras.length - 1],
+    });
+  }
 
   return Object.assign({}, constrain(calendarObj)) as CalendarDate;
 }
