@@ -44,14 +44,6 @@ import { compare } from "./queries";
 
 const ONE_HOUR = 3600000;
 
-export function copy(date: CalendarDateTime): CalendarDateTime;
-export function copy(date: CalendarDate): CalendarDate;
-export function copy(
-  date: AnyCalendarDate | AnyDateTime
-): AnyCalendarDate | AnyDateTime {
-  return Object.assign({}, date);
-}
-
 export function add(
   date: CalendarDateTime,
   duration: DateTimeDuration

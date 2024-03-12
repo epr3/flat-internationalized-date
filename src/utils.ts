@@ -10,58 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  CalendarDate,
-  CalendarDateTime,
-  createCalendarDate,
-  createCalendarDateTime,
-} from "./CalendarDate";
-
 export function mod(amount: number, numerator: number): number {
   return amount - numerator * Math.floor(amount / numerator);
-}
-
-export function copy(date: CalendarDate): CalendarDate {
-  if (date.era) {
-    return createCalendarDate({
-      calendar: date.calendar,
-      era: date.era,
-      year: date.year,
-      month: date.month,
-      day: date.day,
-    });
-  } else {
-    return createCalendarDate({
-      calendar: date.calendar,
-      year: date.year,
-      month: date.month,
-      day: date.day,
-    });
-  }
-}
-
-export function copyDateTime(date: CalendarDateTime): CalendarDateTime {
-  if (date.era) {
-    return createCalendarDateTime({
-      calendar: date.calendar,
-      era: date.era,
-      year: date.year,
-      month: date.month,
-      day: date.day,
-      hour: date.hour,
-      minute: date.minute,
-      second: date.second,
-      millisecond: date.millisecond,
-    });
-  } else {
-    return createCalendarDateTime({
-      calendar: date.calendar,
-      year: date.year,
-      month: date.month,
-      day: date.day,
-      hour: date.hour,
-      minute: date.minute,
-      second: date.second,
-    });
-  }
 }
