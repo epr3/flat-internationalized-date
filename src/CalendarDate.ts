@@ -60,12 +60,10 @@ export function createCalendarDate({
 
   if (!calendarObj.era) {
     const eras = calendars[calendarObj.calendar].getEras();
-    calendarObj = Object.assign({}, calendarObj, {
-      era: eras[eras.length - 1],
-    });
+    calendarObj = { ...calendarObj, era: eras[eras.length - 1] };
   }
 
-  return Object.assign({}, constrain(calendarObj)) as CalendarDate;
+  return { ...constrain(calendarObj) } as CalendarDate;
 }
 
 export function createCalendarDateTime({
@@ -89,24 +87,21 @@ export function createCalendarDateTime({
   second?: number;
   millisecond?: number;
 }): CalendarDateTime {
-  return constrain(
-    Object.assign(
-      {},
-      createCalendarDate({
+  return {
+    ...constrain({
+      ...createCalendarDate({
         calendar,
         era,
         year,
         month,
         day,
       }),
-      {
-        hour: hour ?? 0,
-        minute: minute ?? 0,
-        second: second ?? 0,
-        millisecond: millisecond ?? 0,
-      }
-    )
-  ) as CalendarDateTime;
+      hour: hour ?? 0,
+      minute: minute ?? 0,
+      second: second ?? 0,
+      millisecond: millisecond ?? 0,
+    }),
+  } as CalendarDateTime;
 }
 
 export function createZonedDateTime({
@@ -134,10 +129,9 @@ export function createZonedDateTime({
   timezone: string;
   offset?: number;
 }): ZonedDateTime {
-  return constrain(
-    Object.assign(
-      {},
-      createCalendarDateTime({
+  return {
+    ...constrain({
+      ...createCalendarDateTime({
         calendar,
         era,
         year,
@@ -148,12 +142,10 @@ export function createZonedDateTime({
         second,
         millisecond,
       }),
-      {
-        timezone,
-        offset: offset ?? 0,
-      }
-    )
-  ) as ZonedDateTime;
+      timezone,
+      offset: offset ?? 0,
+    }),
+  } as ZonedDateTime;
 }
 
 export const createTime = ({
@@ -167,17 +159,14 @@ export const createTime = ({
   second?: number;
   millisecond?: number;
 }): Time => {
-  return constrainTime(
-    Object.assign(
-      {},
-      {
-        hour: hour ?? 0,
-        minute: minute ?? 0,
-        second: second ?? 0,
-        millisecond: millisecond ?? 0,
-      }
-    )
-  ) as Time;
+  return {
+    ...constrainTime({
+      hour: hour ?? 0,
+      minute: minute ?? 0,
+      second: second ?? 0,
+      millisecond: millisecond ?? 0,
+    }),
+  } as Time;
 };
 
 /** A CalendarDate represents a date without any time components in a specific calendar system. */
