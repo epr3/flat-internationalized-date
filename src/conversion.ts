@@ -369,15 +369,16 @@ export function toCalendar<T extends AnyCalendarDate>(
   const calendarDate = calendars[calendar].fromJulianDay(
     calendars[date.calendar].toJulianDay(date)
   );
-  const copyDate = constrain(
-    Object.assign({}, date, {
+  const copyDate = {
+    ...constrain({
+      ...date,
       calendar,
       era: calendarDate.era,
       year: calendarDate.year,
       month: calendarDate.month,
       day: calendarDate.day,
-    })
-  ) as T;
+    }),
+  } as T;
 
   return copyDate;
 }
