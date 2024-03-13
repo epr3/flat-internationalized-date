@@ -87,9 +87,10 @@ export function parseDate(value: string): CalendarDate {
     day: 1,
   });
 
-  return Object.assign({}, date, {
+  return {
+    ...date,
     day: parseNumber(m[3], 1, calendars[date.calendar].getDaysInMonth(date)),
-  }) as CalendarDate;
+  } as CalendarDate;
 }
 
 /** Parses an ISO 8601 date and time string, with no time zone. */
@@ -109,9 +110,10 @@ export function parseDateTime(value: string): CalendarDateTime {
     millisecond: m[7] ? parseNumber(m[7], 0, Infinity) * 1000 : 0,
   });
 
-  return Object.assign({}, date, {
+  return {
+    ...date,
     day: parseNumber(m[3], 1, calendars[date.calendar].getDaysInMonth(date)),
-  }) as CalendarDateTime;
+  } as CalendarDateTime;
 }
 
 /**
@@ -141,23 +143,25 @@ export function parseZonedDateTime(
     millisecond: m[7] ? parseNumber(m[7], 0, Infinity) * 1000 : 0,
   });
 
-  newDate = Object.assign({}, newDate, {
+  newDate = {
+    ...newDate,
     day: parseNumber(
       m[3],
       1,
       calendars[newDate.calendar].getDaysInMonth(newDate)
     ),
-  }) as ZonedDateTime;
+  } as ZonedDateTime;
 
   const plainDateTime = toCalendarDateTime(newDate as ZonedDateTime);
 
   let ms: number;
   if (m[8]) {
-    newDate = Object.assign({}, newDate, {
+    newDate = {
+      ...newDate,
       offset:
         parseNumber(m[8], -23, 23) * 60 * 60 * 1000 +
         parseNumber(m[9] ?? "0", 0, 59) * 60 * 1000,
-    });
+    };
     ms = epochFromDate(newDate as ZonedDateTime) - newDate.offset;
 
     // Validate offset against parsed date.
@@ -202,20 +206,22 @@ export function parseAbsolute(value: string, timezone: string): ZonedDateTime {
   });
 
   const newTimezone = newDate.timezone;
-  newDate = Object.assign({}, newDate, {
+  newDate = {
+    ...newDate,
     day: parseNumber(
       m[3],
       1,
       calendars[newDate.calendar].getDaysInMonth(newDate)
     ),
-  }) as ZonedDateTime;
+  } as ZonedDateTime;
 
   if (m[8]) {
-    newDate = Object.assign({}, newDate, {
+    newDate = {
+      ...newDate,
       offset:
         parseNumber(m[8], -23, 23) * 60 * 60 * 1000 +
         parseNumber(m[9] ?? "0", 0, 59) * 60 * 1000,
-    });
+    };
   }
 
   return toTimeZone(newDate as ZonedDateTime, newTimezone);

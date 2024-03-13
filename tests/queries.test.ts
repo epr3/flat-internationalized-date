@@ -36,11 +36,17 @@ import {
   ZonedDateTime,
 } from "..";
 
+import { describe, it, expect } from "vitest";
+import { createCalendarDate } from "../src/CalendarDate";
+
 describe("queries", function () {
   describe("isSameDay", function () {
     it("works with two dates in the same calendar", function () {
       expect(
-        isSameDay(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
+        isSameDay(
+          createCalendarDate({ year: 2020, month: 2, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
+        )
       ).toBe(true);
       expect(
         isSameDay(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))

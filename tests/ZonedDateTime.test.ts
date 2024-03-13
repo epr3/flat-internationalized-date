@@ -11,7 +11,7 @@
  */
 
 import { CalendarDateTime, toZoned } from "../src";
-import { describe, it } from "vitest";
+import { describe, it, expect } from "vitest";
 
 describe("ZonedDateTime", function () {
   describe("add", function () {
