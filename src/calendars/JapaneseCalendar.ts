@@ -82,7 +82,7 @@ function getMinimums(date: AnyCalendarDate) {
 }
 
 function constrainDate(date: AnyCalendarDate) {
-  let newDate = Object.assign({}, date);
+  let newDate = { ...date };
   const idx = ERA_NAMES.indexOf(date.era!);
   const end = ERA_END_DATES[idx];
   console.log(idx);
@@ -92,32 +92,32 @@ function constrainDate(date: AnyCalendarDate) {
     // Constrain the year to the maximum possible value in the era.
     // Then constrain the month and day fields within that.
     const maxYear = endYear - ERA_ADDENDS[idx];
-    newDate = Object.assign({}, newDate, {
+    newDate = { ...newDate,
       year: Math.max(1, Math.min(maxYear, newDate.year)),
-    });
-    if (date.year === maxYear) {
-      newDate = Object.assign({}, newDate, {
+    };
+    if (newDate.year === maxYear) {
+      newDate =  {...newDate,
         month: Math.max(1, Math.min(endMonth, newDate.month)),
-      });
+      };
 
-      if (date.month === endMonth) {
-        newDate = Object.assign({}, newDate, {
+      if (newDate.month === endMonth) {
+        newDate = { ...newDate,
           day: Math.max(1, Math.min(endDay, newDate.day)),
-        });
+        };
       }
     }
   }
 
   if (date.year === 1 && idx >= 0) {
     const [, startMonth, startDay] = ERA_START_DATES[idx];
-    newDate = Object.assign({}, newDate, {
+    newDate = { ...newDate,
       month: Math.max(startMonth, newDate.month),
-    });
+    };
 
-    if (date.month === startMonth) {
-      newDate = Object.assign({}, newDate, {
+    if (newDate.month === startMonth) {
+      newDate = { ...newDate,
         day: Math.max(startDay, newDate.day),
-      });
+      };
     }
   }
 
@@ -151,15 +151,15 @@ export const JapaneseCalendar: Calendar = {
   },
 
   balanceDate(date: AnyCalendarDate) {
-    let newDate = Object.assign({}, date);
+    let newDate = { ...date };
     const gregorianDate = toGregorian(date);
     const era = findEraFromGregorianDate(gregorianDate);
 
     if (ERA_NAMES[era] !== date.era) {
-      newDate = Object.assign({}, newDate, {
+      newDate = { ...newDate,
         era: ERA_NAMES[era],
         year: gregorianDate.year - ERA_ADDENDS[era],
-      });
+      };
     }
 
     // Constrain in case we went before the first supported era.

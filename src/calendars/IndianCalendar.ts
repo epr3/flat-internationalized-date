@@ -135,4 +135,6 @@ export const IndianCalendar = {
   getEras() {
     return ["saka"];
   },
+
+  balanceDate(date: AnyCalendarDate) {return date}
 } satisfies Calendar;

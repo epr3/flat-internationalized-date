@@ -69,4 +69,5 @@ export const BuddhistCalendar = {
   toJulianDay,
   getEras,
   getDaysInMonth,
+  balanceDate(date: AnyCalendarDate) { return date; }
 } satisfies Calendar;

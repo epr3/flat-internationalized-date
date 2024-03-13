@@ -81,7 +81,7 @@ export const TaiwanCalendar = {
   balanceDate(date: AnyCalendarDate) {
     const [era, year] = gregorianToTaiwan(gregorianYear(date));
 
-    return Object.assign({}, date, { era, year });
+    return { ...date, era, year };
   },
 
   isInverseEra(date: AnyCalendarDate): boolean {

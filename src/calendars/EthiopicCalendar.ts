@@ -15,7 +15,6 @@
 
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
-import { copy } from "../utils";
 import { GregorianCalendar } from "./GregorianCalendar";
 
 const ETHIOPIC_EPOCH = 1723856;
@@ -193,12 +192,13 @@ export const CopticCalendar = {
   },
 
   balanceDate(date: AnyCalendarDate) {
-    let newDate = Object.assign({}, date);
+    let newDate = { ...date };
     if (newDate.year <= 0) {
-      newDate = Object.assign({}, newDate, {
+      newDate =  {
+        ...newDate,
         year: 1 - newDate.year,
         era: newDate.era === "BCE" ? "CE" : "BCE",
-      });
+      };
     }
     return newDate;
   },

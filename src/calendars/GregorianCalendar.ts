@@ -136,12 +136,13 @@ function isInverseEra(date: AnyCalendarDate): boolean {
 }
 
 function balanceDate(date: AnyCalendarDate) {
-  let newDate = Object.assign({}, date);
-  if (date.year <= 0) {
-    newDate = Object.assign({}, newDate, {
-      era: date.era === "BC" ? "AD" : "BC",
-      year: 1 - date.year,
-    });
+  let newDate = { ...date };
+  if (newDate.year <= 0) {
+    newDate = {
+      ...newDate,
+      era: newDate.era === "BC" ? "AD" : "BC",
+      year: 1 - newDate.year,
+    };
   }
   return newDate;
 }

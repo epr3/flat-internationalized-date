@@ -16,7 +16,6 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { mod } from "../utils";
-import { GregorianCalendar } from "./GregorianCalendar";
 
 const HEBREW_EPOCH = 347997;
 
@@ -135,7 +134,6 @@ function getDaysInMonth(year: number, month: number): number {
  * In leap years, an extra month is inserted at month 6.
  */
 export const HebrewCalendar = {
-  ...GregorianCalendar,
   name: "hebrew",
 
   fromJulianDay(jd: number): CalendarDate {
@@ -198,7 +196,7 @@ export const HebrewCalendar = {
   },
 
   balanceYearMonth(date: AnyCalendarDate, previousDate: AnyCalendarDate) {
-    let newDate = Object.assign({}, date);
+    let newDate = { ...date };
     // Keep date in the same month when switching between leap years and non leap years
     if (previousDate.year !== date.year) {
       if (
@@ -206,17 +204,19 @@ export const HebrewCalendar = {
         !isLeapYear(date.year) &&
         previousDate.month > 6
       ) {
-        newDate = Object.assign({}, newDate, {
+        newDate = {
+          ...newDate,
           month: date.month - 1,
-        });
+        };
       } else if (
         !isLeapYear(previousDate.year) &&
         isLeapYear(date.year) &&
         previousDate.month > 6
       ) {
-        newDate = Object.assign({}, newDate, {
+        newDate = {
+          ...newDate,
           month: date.month + 1,
-        });
+        };
       }
     }
     return newDate;
