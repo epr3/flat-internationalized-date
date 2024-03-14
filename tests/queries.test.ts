@@ -11,7 +11,6 @@
  */
 
 import {
-  CalendarDate,
   endOfMonth,
   endOfWeek,
   endOfYear,
@@ -33,11 +32,11 @@ import {
   startOfMonth,
   startOfWeek,
   startOfYear,
-  ZonedDateTime,
 } from "..";
 
 import { describe, it, expect } from "vitest";
-import { createCalendarDate } from "../src/CalendarDate";
+import { createCalendarDate, createZonedDateTime } from "../src/CalendarDate";
+import { compare } from "../src/queries";
 
 describe("queries", function () {
   describe("isSameDay", function () {
@@ -49,18 +48,27 @@ describe("queries", function () {
         )
       ).toBe(true);
       expect(
-        isSameDay(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isSameDay(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isSameDay(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
+        isSameDay(
+          createCalendarDate({ year: 2019, month: 2, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
+        )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate("AD", 1, 1, 1),
-          new CalendarDate("BC", 1, 1, 1)
+          createCalendarDate({ year: 2020, month: 3, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
+        )
+      ).toBe(false);
+      expect(
+        isSameDay(
+          createCalendarDate({ year: 2020, month: 2, day: 4 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
+        )
+      ).toBe(false);
+      expect(
+        isSameDay(
+          createCalendarDate({ era: "AD", year: 1, month: 1, day: 1 }),
+          createCalendarDate({ era: "BC", year: 1, month: 1, day: 1 })
         )
       ).toBe(false);
     });
@@ -68,50 +76,90 @@ describe("queries", function () {
     it("works with two dates in different calendars", function () {
       expect(
         isSameDay(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2021, month: 4, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 4,
+          })
         )
       ).toBe(true);
       expect(
         isSameDay(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 4,
+          }),
+          createCalendarDate({ year: 2021, month: 4, day: 16 })
         )
       ).toBe(true);
       expect(
         isSameDay(
-          new CalendarDate(2019, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2019, month: 4, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 4,
+          })
         )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1441, 9, 4)
+          createCalendarDate({ year: 2021, month: 4, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1441,
+            month: 9,
+            day: 4,
+          })
         )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate(2021, 5, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2021, month: 5, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 4,
+          })
         )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 10, 4)
+          createCalendarDate({ year: 2021, month: 4, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 10,
+            day: 4,
+          })
         )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate(2021, 4, 17),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2021, month: 4, day: 17 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 4,
+          })
         )
       ).toBe(false);
       expect(
         isSameDay(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 3)
+          createCalendarDate({ year: 2021, month: 4, day: 16 }),
+          createCalendarDate({
+            calendar: IslamicUmalquraCalendar.name,
+            year: 1442,
+            month: 9,
+            day: 3,
+          })
         )
       ).toBe(false);
     });
@@ -120,585 +168,1034 @@ describe("queries", function () {
   describe("isSameMonth", function () {
     it("works with two dates in the same calendar", function () {
       expect(
-        isSameMonth(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isSameMonth(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isSameMonth(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isSameMonth(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-    });
-
-    it("works with two dates in different calendars", function () {
-      expect(
         isSameMonth(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2020, month: 2, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
         )
       ).toBe(true);
       expect(
         isSameMonth(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
-        )
-      ).toBe(true);
-      expect(
-        isSameMonth(
-          new CalendarDate(2019, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
+          createCalendarDate({ year: 2019, month: 2, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
         )
       ).toBe(false);
       expect(
         isSameMonth(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1441, 9, 4)
+          createCalendarDate({ year: 2020, month: 3, day: 3 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
         )
       ).toBe(false);
       expect(
         isSameMonth(
-          new CalendarDate(2021, 5, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isSameMonth(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 10, 4)
-        )
-      ).toBe(false);
-      expect(
-        isSameMonth(
-          new CalendarDate(2021, 4, 17),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(true);
-      expect(
-        isSameMonth(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 3)
-        )
-      ).toBe(true);
-    });
-
-    it("works with months that span different eras", function () {
-      expect(
-        isSameMonth(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10)
-        )
-      ).toBe(true);
-      expect(
-        isSameMonth(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(1989, 1, 10)
+          createCalendarDate({ year: 2020, month: 2, day: 4 }),
+          createCalendarDate({ year: 2020, month: 2, day: 3 })
         )
       ).toBe(true);
     });
   });
 
-  describe("isSameYear", function () {
-    it("works with two dates in the same calendar", function () {
-      expect(
-        isSameYear(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isSameYear(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isSameYear(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isSameYear(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-    });
-
-    it("works with two dates in different calendars", function () {
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(2019, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1441, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 5, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 10, 4)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 4, 17),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 3)
-        )
-      ).toBe(true);
-    });
-
-    it("works with months that span different eras", function () {
-      expect(
-        isSameYear(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10)
-        )
-      ).toBe(true);
-      expect(
-        isSameYear(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(1989, 1, 10)
-        )
-      ).toBe(true);
-    });
+  it("works with two dates in different calendars", function () {
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameMonth(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        }),
+        createCalendarDate({ year: 2021, month: 4, day: 16 })
+      )
+    ).toBe(true);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2019, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1441,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 5, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 10,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 17 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 3,
+        })
+      )
+    ).toBe(true);
   });
 
-  describe("isEqualDay", function () {
-    it("works with two dates in the same calendar", function () {
-      expect(
-        isEqualDay(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isEqualDay(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isEqualDay(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isEqualDay(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-    });
+  it("works with months that span different eras", function () {
+    expect(
+      isSameMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({ year: 1989, month: 1, day: 10 })
+      )
+    ).toBe(true);
+  });
+});
 
-    it("does not work with two dates in different calendars", function () {
-      expect(
-        isEqualDay(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isEqualDay(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
-        )
-      ).toBe(false);
-    });
+describe("isSameYear", function () {
+  it("works with two dates in the same calendar", function () {
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2019, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2020, month: 3, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2020, month: 2, day: 4 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
   });
 
-  describe("isEqualMonth", function () {
-    it("works with two dates in the same calendar", function () {
-      expect(
-        isEqualMonth(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isEqualMonth(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isEqualMonth(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isEqualMonth(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-    });
-
-    it("does not work with two dates in different calendars", function () {
-      expect(
-        isEqualMonth(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isEqualMonth(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
-        )
-      ).toBe(false);
-    });
-
-    it("works with months that span different eras", function () {
-      expect(
-        isEqualMonth(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10)
-        )
-      ).toBe(true);
-      expect(
-        isEqualMonth(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(1989, 1, 10)
-        )
-      ).toBe(false);
-    });
+  it("works with two dates in different calendars", function () {
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        }),
+        createCalendarDate({ year: 2021, month: 4, day: 16 })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2019, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1441,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 5, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 10,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 4, day: 17 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 3,
+        })
+      )
+    ).toBe(true);
   });
 
-  describe("isEqualYear", function () {
-    it("works with two dates in the same calendar", function () {
-      expect(
-        isEqualYear(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isEqualYear(new CalendarDate(2019, 2, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(false);
-      expect(
-        isEqualYear(new CalendarDate(2020, 3, 3), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-      expect(
-        isEqualYear(new CalendarDate(2020, 2, 4), new CalendarDate(2020, 2, 3))
-      ).toBe(true);
-    });
+  it("works with months that span different eras", function () {
+    expect(
+      isSameYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isSameYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({ year: 1989, month: 1, day: 10 })
+      )
+    ).toBe(true);
+  });
+});
 
-    it("does not work with two dates in different calendars", function () {
-      expect(
-        isEqualYear(
-          new CalendarDate(2021, 4, 16),
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toBe(false);
-      expect(
-        isEqualYear(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4),
-          new CalendarDate(2021, 4, 16)
-        )
-      ).toBe(false);
-    });
-
-    it("works with months that span different eras", function () {
-      expect(
-        isEqualYear(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10)
-        )
-      ).toBe(true);
-      expect(
-        isEqualYear(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3),
-          new CalendarDate(1989, 1, 10)
-        )
-      ).toBe(false);
-    });
+describe("isEqualDay", function () {
+  it("works with two dates in the same calendar", function () {
+    expect(
+      isEqualDay(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isEqualDay(
+        createCalendarDate({ year: 2019, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isEqualDay(
+        createCalendarDate({ year: 2020, month: 3, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isEqualDay(
+        createCalendarDate({ year: 2020, month: 2, day: 4 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
   });
 
-  describe("startOfMonth", function () {
-    it("moves the day to the first of the month", function () {
-      expect(startOfMonth(new CalendarDate(2020, 2, 3))).toEqual(
-        new CalendarDate(2020, 2, 1)
-      );
-      expect(
-        startOfMonth(
-          new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4)
-        )
-      ).toEqual(new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 1));
-    });
+  it("does not work with two dates in different calendars", function () {
+    expect(
+      isEqualDay(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isEqualDay(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        }),
+        createCalendarDate({ year: 2021, month: 4, day: 16 })
+      )
+    ).toBe(false);
+  });
+});
 
-    it("works in months that span eras", function () {
-      expect(
-        startOfMonth(
-          new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3)
-        )
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 1));
-      expect(
-        startOfMonth(
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10)
-        )
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 1));
-    });
-
-    it("works with zoned date times", function () {
-      expect(
-        startOfMonth(
-          new ZonedDateTime(
-            2021,
-            11,
-            10,
-            "America/Los_Angeles",
-            -28800000,
-            1,
-            0,
-            0
-          )
-        )
-      ).toEqual(
-        new ZonedDateTime(
-          2021,
-          11,
-          1,
-          "America/Los_Angeles",
-          -25200000,
-          1,
-          0,
-          0
-        )
-      );
-    });
+describe("isEqualMonth", function () {
+  it("works with two dates in the same calendar", function () {
+    expect(
+      isEqualMonth(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isEqualMonth(
+        createCalendarDate({ year: 2019, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isEqualMonth(
+        createCalendarDate({ year: 2020, month: 3, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isEqualMonth(
+        createCalendarDate({ year: 2020, month: 2, day: 4 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
   });
 
-  describe("endOfMonth", function () {
-    it("moves the day to the last day of the month", function () {
-      expect(endOfMonth(new CalendarDate(2020, 2, 3))).toEqual(
-        new CalendarDate(2020, 2, 29)
-      );
-      expect(
-        endOfMonth(new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 4))
-      ).toEqual(new CalendarDate(new IslamicUmalquraCalendar(), 1442, 9, 30));
-    });
-
-    it("works in years that span eras", function () {
-      expect(
-        endOfMonth(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3))
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 31));
-      expect(
-        endOfMonth(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 10))
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 1, 31));
-    });
-
-    it("works with zoned date times", function () {
-      expect(
-        endOfMonth(
-          new ZonedDateTime(
-            2021,
-            11,
-            5,
-            "America/Los_Angeles",
-            -25200000,
-            1,
-            0,
-            0
-          )
-        )
-      ).toEqual(
-        new ZonedDateTime(
-          2021,
-          11,
-          30,
-          "America/Los_Angeles",
-          -28800000,
-          1,
-          0,
-          0
-        )
-      );
-    });
+  it("does not work with two dates in different calendars", function () {
+    expect(
+      isEqualMonth(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isEqualMonth(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        }),
+        createCalendarDate({ year: 2021, month: 4, day: 16 })
+      )
+    ).toBe(false);
   });
 
-  describe("startOfYear", function () {
-    it("moves the day to the first of the year", function () {
-      expect(startOfYear(new CalendarDate(2020, 2, 3))).toEqual(
-        new CalendarDate(2020, 1, 1)
-      );
-    });
+  it("works with months that span different eras", function () {
+    expect(
+      isEqualMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isEqualMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({ year: 1989, month: 1, day: 10 })
+      )
+    ).toBe(false);
+  });
+});
 
-    it("works in years that span eras", function () {
-      expect(
-        startOfYear(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3))
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 1));
-      expect(
-        startOfYear(
-          new CalendarDate(new JapaneseCalendar(), "heisei", 1, 5, 10)
-        )
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 1));
-    });
-
-    it("works with zoned date times", function () {
-      expect(
-        startOfYear(
-          new ZonedDateTime(
-            2021,
-            11,
-            5,
-            "America/Los_Angeles",
-            -25200000,
-            1,
-            0,
-            0
-          )
-        )
-      ).toEqual(
-        new ZonedDateTime(2021, 1, 1, "America/Los_Angeles", -28800000, 1, 0, 0)
-      );
-    });
+describe("isEqualYear", function () {
+  it("works with two dates in the same calendar", function () {
+    expect(
+      isEqualYear(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isEqualYear(
+        createCalendarDate({ year: 2019, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(false);
+    expect(
+      isEqualYear(
+        createCalendarDate({ year: 2020, month: 3, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
+    expect(
+      isEqualYear(
+        createCalendarDate({ year: 2020, month: 2, day: 4 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(true);
   });
 
-  describe("endOfYear", function () {
-    it("moves the day to the last day of the year", function () {
-      expect(endOfYear(new CalendarDate(2020, 2, 3))).toEqual(
-        new CalendarDate(2020, 12, 31)
-      );
-    });
-
-    it("works in years that span eras", function () {
-      expect(
-        endOfYear(new CalendarDate(new JapaneseCalendar(), "showa", 64, 1, 3))
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 12, 31));
-      expect(
-        endOfYear(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 5, 10))
-      ).toEqual(new CalendarDate(new JapaneseCalendar(), "heisei", 1, 12, 31));
-    });
-
-    it("works with zoned date times", function () {
-      expect(
-        endOfYear(
-          new ZonedDateTime(
-            2021,
-            11,
-            5,
-            "America/Los_Angeles",
-            -25200000,
-            1,
-            0,
-            0
-          )
-        )
-      ).toEqual(
-        new ZonedDateTime(
-          2021,
-          12,
-          31,
-          "America/Los_Angeles",
-          -28800000,
-          1,
-          0,
-          0
-        )
-      );
-    });
+  it("does not work with two dates in different calendars", function () {
+    expect(
+      isEqualYear(
+        createCalendarDate({ year: 2021, month: 4, day: 16 }),
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toBe(false);
+    expect(
+      isEqualYear(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        }),
+        createCalendarDate({ year: 2021, month: 4, day: 16 })
+      )
+    ).toBe(false);
   });
 
-  describe("getDayOfWeek", function () {
-    it("should return the day of week in en-US", function () {
-      expect(getDayOfWeek(new CalendarDate(2021, 8, 4), "en-US")).toBe(3);
-    });
+  it("works with months that span different eras", function () {
+    expect(
+      isEqualYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toBe(true);
+    expect(
+      isEqualYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        }),
+        createCalendarDate({ year: 1989, month: 1, day: 10 })
+      )
+    ).toBe(false);
+  });
+});
 
-    it("should return the day of week in fr-CA", function () {
-      expect(getDayOfWeek(new CalendarDate(2021, 8, 4), "fr-CA")).toBe(3);
-    });
-
-    it("should return the day of week in fr-FR", function () {
-      expect(getDayOfWeek(new CalendarDate(2021, 8, 4), "fr-FR")).toBe(2);
-    });
-
-    it("should return the day of week in fr", function () {
-      expect(getDayOfWeek(new CalendarDate(2021, 8, 4), "fr")).toBe(2);
-    });
+describe("startOfMonth", function () {
+  it("moves the day to the first of the month", function () {
+    expect(
+      startOfMonth(createCalendarDate({ year: 2020, month: 2, day: 3 }))
+    ).toEqual(createCalendarDate({ year: 2020, month: 2, day: 1 }));
+    expect(
+      startOfMonth(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: IslamicUmalquraCalendar.name,
+        year: 1442,
+        month: 9,
+        day: 1,
+      })
+    );
   });
 
-  describe("startOfWeek", function () {
-    it("should return the start of week in en-US", function () {
-      expect(startOfWeek(new CalendarDate(2021, 8, 4), "en-US")).toEqual(
-        new CalendarDate(2021, 8, 1)
-      );
-    });
-
-    it("should return the start of week in fr-FR", function () {
-      expect(startOfWeek(new CalendarDate(2021, 8, 4), "fr-FR")).toEqual(
-        new CalendarDate(2021, 8, 2)
-      );
-    });
+  it("works in months that span eras", function () {
+    expect(
+      startOfMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "showa",
+        year: 64,
+        month: 1,
+        day: 1,
+      })
+    );
+    expect(
+      startOfMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "showa",
+        year: 64,
+        month: 1,
+        day: 1,
+      })
+    );
   });
 
-  describe("endOfWeek", function () {
-    it("should return the start of week in en-US", function () {
-      expect(endOfWeek(new CalendarDate(2021, 8, 4), "en-US")).toEqual(
-        new CalendarDate(2021, 8, 7)
-      );
-    });
+  it("works with zoned date times", function () {
+    expect(
+      startOfMonth(
+        createZonedDateTime({
+          year: 2021,
+          month: 11,
+          day: 10,
+          timezone: "America/Los_Angeles",
+          offset: -28800000,
+          hour: 1,
+          minute: 0,
+          second: 0,
+        })
+      )
+    ).toEqual(
+      createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -25200000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      })
+    );
+  });
+});
 
-    it("should return the start of week in fr-FR", function () {
-      expect(endOfWeek(new CalendarDate(2021, 8, 4), "fr-FR")).toEqual(
-        new CalendarDate(2021, 8, 8)
-      );
-    });
+describe("endOfMonth", function () {
+  it("moves the day to the last day of the month", function () {
+    expect(
+      endOfMonth(createCalendarDate({ year: 2020, month: 2, day: 3 }))
+    ).toEqual(createCalendarDate({ year: 2020, month: 2, day: 29 }));
+    expect(
+      endOfMonth(
+        createCalendarDate({
+          calendar: IslamicUmalquraCalendar.name,
+          year: 1442,
+          month: 9,
+          day: 4,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: IslamicUmalquraCalendar.name,
+        year: 1442,
+        month: 9,
+        day: 30,
+      })
+    );
   });
 
-  describe("getWeeksInMonth", function () {
-    it("should work for months starting at the beginning of the week", function () {
-      expect(getWeeksInMonth(new CalendarDate(2021, 8, 4), "en-US")).toBe(5);
-    });
-
-    it("should work for months starting at the end of the week", function () {
-      expect(getWeeksInMonth(new CalendarDate(2021, 10, 4), "en-US")).toBe(6);
-    });
-
-    it("should work for other calendars", function () {
-      expect(
-        getWeeksInMonth(
-          new CalendarDate(new EthiopicCalendar(), 2013, 13, 4),
-          "en-US"
-        )
-      ).toBe(1);
-    });
+  it("works in years that span eras", function () {
+    expect(
+      endOfMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "heisei",
+        year: 1,
+        month: 1,
+        day: 31,
+      })
+    );
+    expect(
+      endOfMonth(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 1,
+          day: 10,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "heisei",
+        year: 1,
+        month: 1,
+        day: 31,
+      })
+    );
   });
 
-  describe("getMinimumMonthInYear", function () {
-    it("returns the minimum month of the year", function () {
-      expect(getMinimumMonthInYear(new CalendarDate(2020, 2, 3))).toBe(1);
-    });
+  it("works with zoned date times", function () {
+    expect(
+      endOfMonth(
+        createZonedDateTime({
+          year: 2021,
+          month: 11,
+          day: 5,
+          timezone: "America/Los_Angeles",
+          offset: -25200000,
+          hour: 1,
+          minute: 0,
+          second: 0,
+        })
+      )
+    ).toEqual(
+      createZonedDateTime({
+        year: 2021,
+        month: 11,
+        day: 30,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      })
+    );
+  });
+});
+
+describe("startOfYear", function () {
+  it("moves the day to the first of the year", function () {
+    expect(
+      startOfYear(createCalendarDate({ year: 2020, month: 2, day: 3 }))
+    ).toEqual(createCalendarDate({ year: 2020, month: 1, day: 1 }));
   });
 
-  describe("getMinimumDayInMonth", function () {
-    it("returns the minimum day in a month", function () {
-      expect(getMinimumDayInMonth(new CalendarDate(2020, 2, 3))).toBe(1);
-    });
+  it("works in years that span eras", function () {
+    expect(
+      startOfYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "showa",
+        year: 64,
+        month: 1,
+        day: 1,
+      })
+    );
+    expect(
+      startOfYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 5,
+          day: 10,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "showa",
+        year: 64,
+        month: 1,
+        day: 1,
+      })
+    );
   });
 
-  describe("minDate", function () {
-    it("should return the minimum date", function () {
-      expect(
-        minDate(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 5, 3))
-      ).toEqual(new CalendarDate(2020, 2, 3));
-      expect(
-        minDate(new CalendarDate(2020, 5, 3), new CalendarDate(2020, 2, 3))
-      ).toEqual(new CalendarDate(2020, 2, 3));
-    });
+  it("works with zoned date times", function () {
+    expect(
+      startOfYear(
+        createZonedDateTime({
+          year: 2021,
+          month: 11,
+          day: 5,
+          timezone: "America/Los_Angeles",
+          offset: -25200000,
+          hour: 1,
+          minute: 0,
+          second: 0,
+        })
+      )
+    ).toEqual(
+      createZonedDateTime({
+        year: 2021,
+        month: 1,
+        day: 1,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      })
+    );
+  });
+});
+
+describe("endOfYear", function () {
+  it("moves the day to the last day of the year", function () {
+    expect(
+      endOfYear(createCalendarDate({ year: 2020, month: 2, day: 3 }))
+    ).toEqual(createCalendarDate({ year: 2020, month: 12, day: 31 }));
   });
 
-  describe("maxDate", function () {
-    it("should return the maximum date", function () {
-      expect(
-        maxDate(new CalendarDate(2020, 2, 3), new CalendarDate(2020, 5, 3))
-      ).toEqual(new CalendarDate(2020, 5, 3));
-      expect(
-        maxDate(new CalendarDate(2020, 5, 3), new CalendarDate(2020, 2, 3))
-      ).toEqual(new CalendarDate(2020, 5, 3));
-    });
+  it("works in years that span eras", function () {
+    expect(
+      endOfYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "showa",
+          year: 64,
+          month: 1,
+          day: 3,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "heisei",
+        year: 1,
+        month: 12,
+        day: 31,
+      })
+    );
+    expect(
+      endOfYear(
+        createCalendarDate({
+          calendar: JapaneseCalendar.name,
+          era: "heisei",
+          year: 1,
+          month: 5,
+          day: 10,
+        })
+      )
+    ).toEqual(
+      createCalendarDate({
+        calendar: JapaneseCalendar.name,
+        era: "heisei",
+        year: 1,
+        month: 12,
+        day: 31,
+      })
+    );
   });
 
-  describe("compare", function () {
-    it("works with dates in different eras", function () {
-      const a = new CalendarDate("BC", 1, 1, 1);
-      const b = new CalendarDate("AD", 1, 1, 1);
-      expect(a.compare(b)).toBeLessThan(0);
-      expect(b.compare(a)).toBeGreaterThan(0);
-    });
+  it("works with zoned date times", function () {
+    expect(
+      endOfYear(
+        createZonedDateTime({
+          year: 2021,
+          month: 11,
+          day: 5,
+          timezone: "America/Los_Angeles",
+          offset: -25200000,
+          hour: 1,
+          minute: 0,
+          second: 0,
+        })
+      )
+    ).toEqual(
+      createZonedDateTime({
+        year: 2021,
+        month: 12,
+        day: 31,
+        timezone: "America/Los_Angeles",
+        offset: -28800000,
+        hour: 1,
+        minute: 0,
+        second: 0,
+      })
+    );
+  });
+});
+
+describe("getDayOfWeek", function () {
+  it("should return the day of week in en-US", function () {
+    expect(
+      getDayOfWeek(
+        createCalendarDate({ year: 2021, month: 8, day: 4 }),
+        "en-US"
+      )
+    ).toBe(3);
+  });
+
+  it("should return the day of week in fr-CA", function () {
+    expect(
+      getDayOfWeek(
+        createCalendarDate({ year: 2021, month: 8, day: 4 }),
+        "fr-CA"
+      )
+    ).toBe(3);
+  });
+
+  it("should return the day of week in fr-FR", function () {
+    expect(
+      getDayOfWeek(
+        createCalendarDate({ year: 2021, month: 8, day: 4 }),
+        "fr-FR"
+      )
+    ).toBe(2);
+  });
+
+  it("should return the day of week in fr", function () {
+    expect(
+      getDayOfWeek(createCalendarDate({ year: 2021, month: 8, day: 4 }), "fr")
+    ).toBe(2);
+  });
+});
+
+describe("startOfWeek", function () {
+  it("should return the start of week in en-US", function () {
+    expect(
+      startOfWeek(createCalendarDate({ year: 2021, month: 8, day: 4 }), "en-US")
+    ).toEqual(createCalendarDate({ year: 2021, month: 8, day: 1 }));
+  });
+
+  it("should return the start of week in fr-FR", function () {
+    expect(
+      startOfWeek(createCalendarDate({ year: 2021, month: 8, day: 4 }), "fr-FR")
+    ).toEqual(createCalendarDate({ year: 2021, month: 8, day: 2 }));
+  });
+});
+
+describe("endOfWeek", function () {
+  it("should return the end of week in en-US", function () {
+    expect(
+      endOfWeek(createCalendarDate({ year: 2021, month: 8, day: 4 }), "en-US")
+    ).toEqual(createCalendarDate({ year: 2021, month: 8, day: 7 }));
+  });
+
+  it("should return the end of week in fr-FR", function () {
+    expect(
+      endOfWeek(createCalendarDate({ year: 2021, month: 8, day: 4 }), "fr-FR")
+    ).toEqual(createCalendarDate({ year: 2021, month: 8, day: 8 }));
+  });
+});
+
+describe("getWeeksInMonth", function () {
+  it("should work for months starting at the beginning of the week", function () {
+    expect(
+      getWeeksInMonth(
+        createCalendarDate({ year: 2021, month: 8, day: 4 }),
+        "en-US"
+      )
+    ).toBe(5);
+  });
+
+  it("should work for months starting at the end of the week", function () {
+    expect(
+      getWeeksInMonth(
+        createCalendarDate({ year: 2021, month: 10, day: 4 }),
+        "en-US"
+      )
+    ).toBe(6);
+  });
+
+  it("should work for other calendars", function () {
+    expect(
+      getWeeksInMonth(
+        createCalendarDate({
+          calendar: EthiopicCalendar.name,
+          year: 2013,
+          month: 13,
+          day: 4,
+        }),
+        "en-US"
+      )
+    ).toBe(1);
+  });
+});
+
+describe("getMinimumMonthInYear", function () {
+  it("returns the minimum month of the year", function () {
+    expect(
+      getMinimumMonthInYear(
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toBe(1);
+  });
+});
+
+describe("getMinimumDayInMonth", function () {
+  it("returns the minimum day in a month", function () {
+    expect(
+      getMinimumDayInMonth(createCalendarDate({ year: 2020, month: 2, day: 3 }))
+    ).toBe(1);
+  });
+});
+
+describe("minDate", function () {
+  it("should return the minimum date", function () {
+    expect(
+      minDate(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 5, day: 3 })
+      )
+    ).toEqual(createCalendarDate({ year: 2020, month: 2, day: 3 }));
+    expect(
+      minDate(
+        createCalendarDate({ year: 2020, month: 5, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toEqual(createCalendarDate({ year: 2020, month: 2, day: 3 }));
+  });
+});
+
+describe("maxDate", function () {
+  it("should return the maximum date", function () {
+    expect(
+      maxDate(
+        createCalendarDate({ year: 2020, month: 2, day: 3 }),
+        createCalendarDate({ year: 2020, month: 5, day: 3 })
+      )
+    ).toEqual(createCalendarDate({ year: 2020, month: 5, day: 3 }));
+    expect(
+      maxDate(
+        createCalendarDate({ year: 2020, month: 5, day: 3 }),
+        createCalendarDate({ year: 2020, month: 2, day: 3 })
+      )
+    ).toEqual(createCalendarDate({ year: 2020, month: 5, day: 3 }));
+  });
+});
+
+describe("compare", function () {
+  it("works with dates in different eras", function () {
+    const a = createCalendarDate({ era: "BC", year: 1, month: 1, day: 1 });
+    const b = createCalendarDate({ era: "AD", year: 1, month: 1, day: 1 });
+    expect(compare(a, b)).toBeLessThan(0);
+    expect(compare(b, a)).toBeGreaterThan(0);
   });
 });

@@ -343,12 +343,21 @@ export function set(
   date: CalendarDateTime,
   fields: DateFields
 ): CalendarDateTime;
+export function set(
+  date: ZonedDateTime,
+  fields: DateFields & TimeFields,
+  disambiguation?: Disambiguation
+): ZonedDateTime;
 export function set(date: CalendarDate, fields: DateFields): CalendarDate;
 export function set(
-  date: CalendarDate | CalendarDateTime,
-  fields: DateFields & TimeFields
-): CalendarDate | CalendarDateTime;
-export function set(date: CalendarDate | CalendarDateTime, fields: DateFields) {
+  date: CalendarDate | CalendarDateTime | ZonedDateTime,
+  fields: DateFields & TimeFields,
+  disambiguation?: Disambiguation
+): CalendarDate | CalendarDateTime | ZonedDateTime {
+  if (isZonedDateTime(date)) {
+    return setZoned(date, fields, disambiguation);
+  }
+
   let mutableDate: CalendarDate | CalendarDateTime = {
     ...date,
     year: fields.year ?? date.year,
