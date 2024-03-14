@@ -21,111 +21,6 @@ interface DateRangeFormatPart extends Intl.DateTimeFormatPart {
   source: "startRange" | "endRange" | "shared";
 }
 
-/** A wrapper around Intl.DateTimeFormat that fixes various browser bugs, and polyfills new features. */
-export class DateFormatter implements Intl.DateTimeFormat {
-  private formatter: Intl.DateTimeFormat;
-  private options: Intl.DateTimeFormatOptions;
-  private resolvedHourCycle: Intl.DateTimeFormatOptions["hourCycle"];
-
-  constructor(locale: string, options: Intl.DateTimeFormatOptions = {}) {
-    this.formatter = getCachedDateFormatter(locale, options);
-    this.options = options;
-  }
-
-  /** Formats a date as a string according to the locale and format options passed to the constructor. */
-  format(value: Date): string {
-    return this.formatter.format(value);
-  }
-
-  /** Formats a date to an array of parts such as separators, numbers, punctuation, and more. */
-  formatToParts(value: Date): Intl.DateTimeFormatPart[] {
-    return this.formatter.formatToParts(value);
-  }
-
-  /** Formats a date range as a string. */
-  formatRange(start: Date, end: Date): string {
-    if (typeof this.formatter.formatRange === "function") {
-      return this.formatter.formatRange(start, end);
-    }
-
-    if (end < start) {
-      throw new RangeError("End date must be >= start date");
-    }
-
-    // Very basic fallback for old browsers.
-    return `${this.formatter.format(start)} – ${this.formatter.format(end)}`;
-  }
-
-  /** Formats a date range as an array of parts. */
-  formatRangeToParts(start: Date, end: Date): DateRangeFormatPart[] {
-    if (typeof this.formatter.formatRangeToParts === "function") {
-      return this.formatter.formatRangeToParts(start, end);
-    }
-
-    if (end < start) {
-      throw new RangeError("End date must be >= start date");
-    }
-
-    const startParts = this.formatter.formatToParts(start);
-    const endParts = this.formatter.formatToParts(end);
-    return [
-      ...startParts.map(
-        (p) => ({ ...p, source: "startRange" }) as DateRangeFormatPart
-      ),
-      { type: "literal", value: " – ", source: "shared" },
-      ...endParts.map(
-        (p) => ({ ...p, source: "endRange" }) as DateRangeFormatPart
-      ),
-    ];
-  }
-
-  /** Returns the resolved formatting options based on the values passed to the constructor. */
-  resolvedOptions(): ResolvedDateTimeFormatOptions {
-    const resolvedOptions =
-      this.formatter.resolvedOptions() as ResolvedDateTimeFormatOptions;
-    if (hasBuggyResolvedHourCycle()) {
-      if (!this.resolvedHourCycle) {
-        this.resolvedHourCycle = getResolvedHourCycle(
-          resolvedOptions.locale,
-          this.options
-        );
-      }
-      resolvedOptions.hourCycle = this.resolvedHourCycle;
-      resolvedOptions.hour12 =
-        this.resolvedHourCycle === "h11" || this.resolvedHourCycle === "h12";
-    }
-
-    // Safari uses a different name for the Ethiopic (Amete Alem) calendar.
-    // https://bugs.webkit.org/show_bug.cgi?id=241564
-    if (resolvedOptions.calendar === "ethiopic-amete-alem") {
-      resolvedOptions.calendar = "ethioaa";
-    }
-
-    return resolvedOptions;
-  }
-}
-
-// There are multiple bugs involving the hour12 and hourCycle options in various browser engines.
-//   - Chrome [1] (and the ECMA 402 spec [2]) resolve hour12: false in English and other locales to h24 (24:00 - 23:59)
-//     rather than h23 (00:00 - 23:59). Same can happen with hour12: true in French, which Chrome resolves to h11 (00:00 - 11:59)
-//     rather than h12 (12:00 - 11:59).
-//   - WebKit returns an incorrect hourCycle resolved option in the French locale due to incorrect parsing of 'h' literal
-//     in the resolved pattern. It also formats incorrectly when specifying the hourCycle option for the same reason. [3]
-// [1] https://bugs.chromium.org/p/chromium/issues/detail?id=1045791
-// [2] https://github.com/tc39/ecma402/issues/402
-// [3] https://bugs.webkit.org/show_bug.cgi?id=229313
-
-// https://github.com/unicode-org/cldr/blob/018b55eff7ceb389c7e3fc44e2f657eae3b10b38/common/supplemental/supplementalData.xml#L4774-L4802
-const hour12Preferences: Record<string, Record<string, string | undefined>> = {
-  true: {
-    // Only Japanese uses the h11 style for 12 hour time. All others use h12.
-    ja: "h11",
-  },
-  false: {
-    // All locales use h23 for 24 hour time. None use h24.
-  },
-};
-
 function getCachedDateFormatter(
   locale: string,
   options: Intl.DateTimeFormatOptions = {}
@@ -234,3 +129,117 @@ function getResolvedHourCycle(
 
   throw new Error("Unexpected hour cycle result");
 }
+
+/** A wrapper around Intl.DateTimeFormat that fixes various browser bugs, and polyfills new features. */
+export function DateFormatter(
+  locale: string,
+  options: Intl.DateTimeFormatOptions = {}
+) {
+  const formatter: Intl.DateTimeFormat = getCachedDateFormatter(
+    locale,
+    options
+  );
+  let resolvedHourCycle: Intl.DateTimeFormatOptions["hourCycle"];
+
+  /** Formats a date as a string according to the locale and format options passed to the constructor. */
+  function format(value: Date): string {
+    return formatter.format(value);
+  }
+
+  /** Formats a date to an array of parts such as separators, numbers, punctuation, and more. */
+  function formatToParts(value: Date): Intl.DateTimeFormatPart[] {
+    return formatter.formatToParts(value);
+  }
+
+  /** Formats a date range as a string. */
+  function formatRange(start: Date, end: Date): string {
+    if (typeof formatter.formatRange === "function") {
+      return formatter.formatRange(start, end);
+    }
+
+    if (end < start) {
+      throw new RangeError("End date must be >= start date");
+    }
+
+    // Very basic fallback for old browsers.
+    return `${formatter.format(start)} – ${formatter.format(end)}`;
+  }
+
+  /** Formats a date range as an array of parts. */
+  function formatRangeToParts(start: Date, end: Date): DateRangeFormatPart[] {
+    if (typeof formatter.formatRangeToParts === "function") {
+      return formatter.formatRangeToParts(start, end);
+    }
+
+    if (end < start) {
+      throw new RangeError("End date must be >= start date");
+    }
+
+    const startParts = formatter.formatToParts(start);
+    const endParts = formatter.formatToParts(end);
+    return [
+      ...startParts.map(
+        (p) => ({ ...p, source: "startRange" }) as DateRangeFormatPart
+      ),
+      { type: "literal", value: " – ", source: "shared" },
+      ...endParts.map(
+        (p) => ({ ...p, source: "endRange" }) as DateRangeFormatPart
+      ),
+    ];
+  }
+
+  /** Returns the resolved formatting options based on the values passed to the constructor. */
+  function resolvedOptions(): ResolvedDateTimeFormatOptions {
+    const resolvedOptions =
+      formatter.resolvedOptions() as ResolvedDateTimeFormatOptions;
+    if (hasBuggyResolvedHourCycle()) {
+      if (!resolvedHourCycle) {
+        resolvedHourCycle = getResolvedHourCycle(
+          resolvedOptions.locale,
+          options
+        );
+      }
+      resolvedOptions.hourCycle = resolvedHourCycle;
+      resolvedOptions.hour12 =
+        resolvedHourCycle === "h11" || resolvedHourCycle === "h12";
+    }
+
+    // Safari uses a different name for the Ethiopic (Amete Alem) calendar.
+    // https://bugs.webkit.org/show_bug.cgi?id=241564
+    if (resolvedOptions.calendar === "ethiopic-amete-alem") {
+      resolvedOptions.calendar = "ethioaa";
+    }
+
+    return resolvedOptions;
+  }
+
+  return {
+    formatter,
+    format,
+    formatToParts,
+    formatRange,
+    formatRangeToParts,
+    resolvedOptions,
+  };
+}
+
+// There are multiple bugs involving the hour12 and hourCycle options in various browser engines.
+//   - Chrome [1] (and the ECMA 402 spec [2]) resolve hour12: false in English and other locales to h24 (24:00 - 23:59)
+//     rather than h23 (00:00 - 23:59). Same can happen with hour12: true in French, which Chrome resolves to h11 (00:00 - 11:59)
+//     rather than h12 (12:00 - 11:59).
+//   - WebKit returns an incorrect hourCycle resolved option in the French locale due to incorrect parsing of 'h' literal
+//     in the resolved pattern. It also formats incorrectly when specifying the hourCycle option for the same reason. [3]
+// [1] https://bugs.chromium.org/p/chromium/issues/detail?id=1045791
+// [2] https://github.com/tc39/ecma402/issues/402
+// [3] https://bugs.webkit.org/show_bug.cgi?id=229313
+
+// https://github.com/unicode-org/cldr/blob/018b55eff7ceb389c7e3fc44e2f657eae3b10b38/common/supplemental/supplementalData.xml#L4774-L4802
+const hour12Preferences: Record<string, Record<string, string | undefined>> = {
+  true: {
+    // Only Japanese uses the h11 style for 12 hour time. All others use h12.
+    ja: "h11",
+  },
+  false: {
+    // All locales use h23 for 24 hour time. None use h24.
+  },
+};

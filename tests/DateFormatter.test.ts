@@ -20,8 +20,8 @@ describe("DateFormatter", function () {
     vi.spyOn(
       Intl.DateTimeFormat.prototype,
       "resolvedOptions"
-    ).mockImplementation(function () {
-      const s = resolvedOptions.call(this as unknown);
+    ).mockImplementation(function (this: Intl.DateTimeFormat) {
+      const s = resolvedOptions.call(this);
       if (s.locale === "fr" && s.hour12 === false) {
         s.hour12 = true;
         s.hourCycle = "h12";
@@ -31,12 +31,12 @@ describe("DateFormatter", function () {
   });
 
   it("should format a basic date", function () {
-    const formatter = new DateFormatter("en-US");
+    const formatter = DateFormatter("en-US");
     expect(formatter.format(new Date(2020, 1, 3))).toBe("2/3/2020");
   });
 
   it("should format to parts", function () {
-    const formatter = new DateFormatter("en-US");
+    const formatter = DateFormatter("en-US");
     expect(formatter.formatToParts(new Date(2020, 1, 3))).toEqual([
       { type: "month", value: "2" },
       { type: "literal", value: "/" },
@@ -47,8 +47,9 @@ describe("DateFormatter", function () {
   });
 
   it("should format a range", function () {
-    const formatter = new DateFormatter("en-US");
+    const formatter = DateFormatter("en-US");
     // Test fallback
+    //@ts-expect-error test fallback
     formatter.formatter.formatRange = null;
     expect(
       formatter.formatRange(new Date(2020, 1, 3), new Date(2020, 1, 5))
@@ -56,8 +57,9 @@ describe("DateFormatter", function () {
   });
 
   it("should format a range to parts", function () {
-    const formatter = new DateFormatter("en-US");
+    const formatter = DateFormatter("en-US");
     // Test fallback
+    //@ts-expect-error test fallback
     formatter.formatter.formatRangeToParts = null;
     expect(
       formatter.formatRangeToParts(new Date(2020, 1, 3), new Date(2020, 1, 5))
@@ -77,24 +79,24 @@ describe("DateFormatter", function () {
   });
 
   it("should work around buggy hour12 behavior", function () {
-    let formatter = new DateFormatter("en-US", {
+    let formatter = DateFormatter("en-US", {
       timeStyle: "short",
       hour12: false,
     });
     expect(formatter.format(new Date(2020, 1, 3, 0))).toBe("00:00");
     expect(formatter.resolvedOptions().hourCycle).toBe("h23");
 
-    formatter = new DateFormatter("fr-CA", { hour: "numeric", hour12: true });
+    formatter = DateFormatter("fr-CA", { hour: "numeric", hour12: true });
     expect(formatter.format(new Date(2020, 1, 3, 0))).toBe("12 h a.m.");
     expect(formatter.resolvedOptions().hourCycle).toBe("h12");
 
-    formatter = new DateFormatter("ja", { hour: "numeric", hour12: true });
+    formatter = DateFormatter("ja", { hour: "numeric", hour12: true });
     expect(formatter.format(new Date(2020, 1, 3, 0))).toBe("午前0時");
     expect(formatter.resolvedOptions().hourCycle).toBe("h11");
   });
 
   it("should work around buggy resolved hour cycle", function () {
-    const formatter = new DateFormatter("fr", {
+    const formatter = DateFormatter("fr", {
       hour: "numeric",
       hour12: false,
     });
