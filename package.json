@@ -32,7 +32,7 @@
     "lint": "eslint . --ignore-path .gitignore",
     "lint:fix": "eslint . --fix --ignore-path .gitignore",
     "bumpp": "bumpp package.json",
-    "pub:release": "pnpm publish --access public",
+    "pub:release": "pnpm publish --no-git-checks --access public",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "build": "pnpm type-check && pnpm build-only",
     "build-only": "vite build",
