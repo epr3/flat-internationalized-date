@@ -55,6 +55,8 @@ export {
   CopticCalendar,
 } from "./calendars/EthiopicCalendar";
 
+export { add, subtract, cycle, set } from "./manipulation";
+
 export {
   toCalendarDate,
   toCalendarDateTime,
