@@ -24,7 +24,7 @@
   "packageManager": "pnpm@8.15.4",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:epr3/flat-internationalized-date.git"
+    "url": "git+https://github.com/epr3/flat-internationalized-date.git"
   },
   "scripts": {
     "test": "vitest",
@@ -35,7 +35,8 @@
     "pub:release": "pnpm publish --access public",
     "type-check": "tsc -p tsconfig.json --noEmit",
     "build": "pnpm type-check && pnpm build-only",
-    "build-only": "vite build"
+    "build-only": "vite build",
+    "commit": "cz"
   },
   "author": {
     "name": "Eduard Predescu",
@@ -56,6 +57,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.10.0",
