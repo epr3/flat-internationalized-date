@@ -28,10 +28,14 @@ export type {
 } from "./types";
 
 export {
-  CalendarDate,
-  CalendarDateTime,
-  Time,
-  ZonedDateTime,
+  type CalendarDate,
+  type CalendarDateTime,
+  type Time,
+  type ZonedDateTime,
+  createCalendarDate,
+  createCalendarDateTime,
+  createZonedDateTime,
+  createTime,
 } from "./CalendarDate";
 export { GregorianCalendar } from "./calendars/GregorianCalendar";
 export { JapaneseCalendar } from "./calendars/JapaneseCalendar";
