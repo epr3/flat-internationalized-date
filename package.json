@@ -1,6 +1,6 @@
 {
   "name": "flat-internationalized-date",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Internationalized calendar, date, and time manipulation utilities in a flat object format",
   "type": "module",
   "sideEffects": false,
