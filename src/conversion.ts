@@ -323,18 +323,40 @@ export function toCalendarDateTime(
   date: CalendarDate | CalendarDateTime | ZonedDateTime,
   time?: AnyTime
 ): CalendarDateTime {
-  let hour = 0,
+  const hour = 0,
     minute = 0,
     second = 0,
     millisecond = 0;
   if ("timezone" in date) {
-    ({ hour, minute, second, millisecond } = date);
+    const { hour, minute, second, millisecond } = date;
+    return createCalendarDateTime({
+      calendar: date.calendar,
+      era: date.era,
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour,
+      minute,
+      second,
+      millisecond,
+    });
   } else if ("hour" in date && !time) {
     return date;
   }
 
   if (time) {
-    ({ hour, minute, second, millisecond } = time);
+    const { hour, minute, second, millisecond } = time;
+    return createCalendarDateTime({
+      calendar: date.calendar,
+      era: date.era,
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour,
+      minute,
+      second,
+      millisecond,
+    });
   }
 
   return createCalendarDateTime({
