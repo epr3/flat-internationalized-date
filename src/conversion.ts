@@ -36,8 +36,8 @@ import {
   getExtendedYear,
   GregorianCalendar,
 } from "./calendars/GregorianCalendar";
-import { getLocalTimeZone } from "./queries";
-import { calendars } from "./calendars";
+import { getLocalTimeZone, isZonedDateTime } from "./queries";
+import { CALENDAR, calendars } from "./calendars";
 
 export function epochFromDate(date: AnyDateTime) {
   date = toCalendar(date, GregorianCalendar.name);
@@ -238,10 +238,13 @@ export function toAbsolute(
 }
 
 export function toDate(
-  dateTime: CalendarDate | CalendarDateTime,
+  dateTime: CalendarDate | CalendarDateTime | ZonedDateTime,
   timezone: string,
   disambiguation: Disambiguation = "compatible"
 ): Date {
+  if (isZonedDateTime(dateTime)) {
+    return zonedToDate(dateTime);
+  }
   return new Date(toAbsolute(dateTime, timezone, disambiguation));
 }
 
@@ -360,7 +363,7 @@ export function toTime(dateTime: CalendarDateTime | ZonedDateTime): Time {
 /** Converts a date from one calendar system to another. */
 export function toCalendar<T extends AnyCalendarDate>(
   date: T,
-  calendar: string
+  calendar: CALENDAR
 ): T {
   if (date.calendar === calendar) {
     return date;

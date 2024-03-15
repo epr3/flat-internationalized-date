@@ -28,7 +28,7 @@ import { weekStartData } from "./weekStartData";
 import { add, subtract } from "./manipulation";
 import { calendars } from "./calendars/index";
 
-type DateValue = CalendarDate | CalendarDateTime | ZonedDateTime;
+export type DateValue = CalendarDate | CalendarDateTime | ZonedDateTime;
 
 /** Returns whether the given dates occur on the same day, regardless of the time or calendar system. */
 export function isSameDay(a: DateValue, b: DateValue): boolean {
