@@ -83,6 +83,9 @@ export {
   isWeekday,
   compare,
   type DateValue,
+  isZonedDateTime,
+  isCalendarDate,
+  isCalendarDateTime,
 } from "./queries";
 
 export {
