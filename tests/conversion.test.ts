@@ -11,18 +11,7 @@
  */
 
 import {
-  BuddhistCalendar,
-  EthiopicAmeteAlemCalendar,
-  EthiopicCalendar,
-  GregorianCalendar,
-  HebrewCalendar,
-  IndianCalendar,
-  IslamicCivilCalendar,
-  IslamicTabularCalendar,
-  IslamicUmalquraCalendar,
-  JapaneseCalendar,
-  PersianCalendar,
-  TaiwanCalendar,
+  CALENDAR,
   toCalendar,
   toCalendarDate,
   toCalendarDateTime,
@@ -305,7 +294,7 @@ describe("CalendarDate conversion", function () {
   describe("toCalendar", function () {
     it("should support converting a CalendarDateTime between calendars", function () {
       const date = createCalendarDateTime({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "heisei",
         year: 31,
         month: 4,
@@ -315,7 +304,7 @@ describe("CalendarDate conversion", function () {
         second: 30,
         millisecond: 80,
       });
-      expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+      expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
         createCalendarDateTime({
           year: 2019,
           month: 4,
@@ -340,33 +329,33 @@ describe("CalendarDate conversion", function () {
     describe("japanese", function () {
       it("japanese to gregorian", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 4,
           day: 30,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2019, month: 4, day: 30 })
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 2,
           month: 4,
           day: 30,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 4, day: 30 })
         );
       });
 
       it("gregorian to japanese", function () {
         let date = createCalendarDate({ year: 2019, month: 4, day: 30 });
-        expect(toCalendar(date, JapaneseCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.JAPANESE)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -375,9 +364,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2020, month: 4, day: 30 });
-        expect(toCalendar(date, JapaneseCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.JAPANESE)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 2,
             month: 4,
@@ -388,7 +377,7 @@ describe("CalendarDate conversion", function () {
 
       it("returns the correct number of days for leap and non-leap years", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 4,
           month: 2,
@@ -397,7 +386,7 @@ describe("CalendarDate conversion", function () {
         expect(calendars[date.calendar].getDaysInMonth(date)).toBe(28);
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 2,
           month: 2,
@@ -408,9 +397,9 @@ describe("CalendarDate conversion", function () {
 
       it("constrains dates outside supported eras", function () {
         const date = createCalendarDate({ year: 1700, month: 4, day: 30 });
-        expect(toCalendar(date, JapaneseCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.JAPANESE)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "meiji",
             year: 1,
             month: 9,
@@ -423,22 +412,22 @@ describe("CalendarDate conversion", function () {
     describe("taiwan", function () {
       it("taiwan to gregorian", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "minguo",
           year: 109,
           month: 2,
           day: 3,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 2, day: 3 })
         );
       });
 
       it("gregorian to taiwan", function () {
         const date = createCalendarDate({ year: 2020, month: 2, day: 3 });
-        expect(toCalendar(date, TaiwanCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.TAIWAN)).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "minguo",
             year: 109,
             month: 2,
@@ -449,33 +438,33 @@ describe("CalendarDate conversion", function () {
 
       it("taiwan to gregorian at era boundaries", function () {
         let date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "minguo",
           year: 1,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 1912, month: 1, day: 1 })
         );
 
         date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 1,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 1911, month: 1, day: 1 })
         );
       });
 
       it("gregorian to taiwan at era boundaries", function () {
         let date = createCalendarDate({ year: 1912, month: 1, day: 1 });
-        expect(toCalendar(date, TaiwanCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.TAIWAN)).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "minguo",
             year: 1,
             month: 1,
@@ -484,9 +473,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 1911, month: 1, day: 1 });
-        expect(toCalendar(date, TaiwanCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.TAIWAN)).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1,
             month: 1,
@@ -497,9 +486,9 @@ describe("CalendarDate conversion", function () {
 
       it("handles BC dates", function () {
         let date = createCalendarDate({ era: "BC", year: 2, month: 1, day: 1 });
-        expect(toCalendar(date, TaiwanCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.TAIWAN)).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1913,
             month: 1,
@@ -508,13 +497,13 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 1913,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ era: "BC", year: 2, month: 1, day: 1 })
         );
       });
@@ -523,21 +512,21 @@ describe("CalendarDate conversion", function () {
     describe("buddhist", function () {
       it("buddhist to gregorian", function () {
         const date = createCalendarDate({
-          calendar: BuddhistCalendar.name,
+          calendar: CALENDAR.BUDDHIST,
           year: 2563,
           month: 4,
           day: 30,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 4, day: 30 })
         );
       });
 
       it("gregorian to buddhist", function () {
         const date = createCalendarDate({ year: 2020, month: 4, day: 30 });
-        expect(toCalendar(date, BuddhistCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.BUDDHIST)).toEqual(
           createCalendarDate({
-            calendar: BuddhistCalendar.name,
+            calendar: CALENDAR.BUDDHIST,
             year: 2563,
             month: 4,
             day: 30,
@@ -547,9 +536,9 @@ describe("CalendarDate conversion", function () {
 
       it("handles BC dates", function () {
         let date = createCalendarDate({ era: "BC", year: 2, month: 1, day: 1 });
-        expect(toCalendar(date, BuddhistCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.BUDDHIST)).toEqual(
           createCalendarDate({
-            calendar: BuddhistCalendar.name,
+            calendar: CALENDAR.BUDDHIST,
             year: 542,
             month: 1,
             day: 1,
@@ -557,12 +546,12 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({
-          calendar: BuddhistCalendar.name,
+          calendar: CALENDAR.BUDDHIST,
           year: 542,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ era: "BC", year: 2, month: 1, day: 1 })
         );
       });
@@ -571,73 +560,73 @@ describe("CalendarDate conversion", function () {
     describe("indian", function () {
       it("indian to gregorian", function () {
         let date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1941,
           month: 4,
           day: 30,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2019, month: 7, day: 21 })
         );
 
         date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1941,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2019, month: 3, day: 22 })
         );
 
         date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1941,
           month: 9,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2019, month: 11, day: 22 })
         );
       });
 
       it("indian to gregorian in a leap year", function () {
         let date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1942,
           month: 4,
           day: 30,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 7, day: 21 })
         );
 
         date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1942,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 3, day: 21 })
         );
 
         date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1942,
           month: 9,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 11, day: 22 })
         );
       });
 
       it("gregorian to indian", function () {
         let date = createCalendarDate({ year: 2019, month: 7, day: 21 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1941,
             month: 4,
             day: 30,
@@ -645,9 +634,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2019, month: 1, day: 22 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1940,
             month: 11,
             day: 2,
@@ -655,9 +644,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2019, month: 3, day: 22 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1941,
             month: 1,
             day: 1,
@@ -665,9 +654,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2019, month: 11, day: 22 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1941,
             month: 9,
             day: 1,
@@ -677,9 +666,9 @@ describe("CalendarDate conversion", function () {
 
       it("gregorian to indian in a leap year", function () {
         let date = createCalendarDate({ year: 2020, month: 7, day: 21 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1942,
             month: 4,
             day: 30,
@@ -687,9 +676,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2021, month: 1, day: 22 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1942,
             month: 11,
             day: 2,
@@ -697,9 +686,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2020, month: 3, day: 21 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1942,
             month: 1,
             day: 1,
@@ -707,9 +696,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2020, month: 11, day: 22 });
-        expect(toCalendar(date, IndianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.INDIAN)).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1942,
             month: 9,
             day: 1,
@@ -721,21 +710,21 @@ describe("CalendarDate conversion", function () {
     describe("islamic-civil", function () {
       it("islamic-civil to gregorian", function () {
         const date = createCalendarDate({
-          calendar: IslamicCivilCalendar.name,
+          calendar: CALENDAR.ISLAMIC_CIVIL,
           year: 1442,
           month: 2,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 9, day: 22 })
         );
       });
 
       it("gregorian to islamic-civil", function () {
         const date = createCalendarDate({ year: 2020, month: 9, day: 22 });
-        expect(toCalendar(date, IslamicCivilCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_CIVIL)).toEqual(
           createCalendarDate({
-            calendar: IslamicCivilCalendar.name,
+            calendar: CALENDAR.ISLAMIC_CIVIL,
             year: 1442,
             month: 2,
             day: 4,
@@ -747,21 +736,21 @@ describe("CalendarDate conversion", function () {
     describe("islamic-tbla", function () {
       it("islamic-tbla to gregorian", function () {
         const date = createCalendarDate({
-          calendar: IslamicTabularCalendar.name,
+          calendar: CALENDAR.ISLAMIC_TABULAR,
           year: 1442,
           month: 2,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 9, day: 21 })
         );
       });
 
       it("gregorian to islamic-tbla", function () {
         const date = createCalendarDate({ year: 2020, month: 9, day: 21 });
-        expect(toCalendar(date, IslamicTabularCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_TABULAR)).toEqual(
           createCalendarDate({
-            calendar: IslamicTabularCalendar.name,
+            calendar: CALENDAR.ISLAMIC_TABULAR,
             year: 1442,
             month: 2,
             day: 4,
@@ -773,51 +762,51 @@ describe("CalendarDate conversion", function () {
     describe("islamic-umalqura", function () {
       it("islamic-umalqura to gregorian", function () {
         let date = createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2021, month: 4, day: 16 })
         );
 
         date = createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1600,
           month: 9,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2174, month: 8, day: 2 })
         );
 
         date = createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1601,
           month: 9,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2175, month: 7, day: 23 })
         );
 
         date = createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1200,
           month: 9,
           day: 4,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 1786, month: 7, day: 1 })
         );
       });
 
       it("gregorian to islamic-umalqura", function () {
         let date = createCalendarDate({ year: 2021, month: 4, day: 16 });
-        expect(toCalendar(date, IslamicUmalquraCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_UMALQURA)).toEqual(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -825,9 +814,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2174, month: 8, day: 2 });
-        expect(toCalendar(date, IslamicUmalquraCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_UMALQURA)).toEqual(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1600,
             month: 9,
             day: 4,
@@ -835,9 +824,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 2175, month: 7, day: 23 });
-        expect(toCalendar(date, IslamicUmalquraCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_UMALQURA)).toEqual(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1601,
             month: 9,
             day: 4,
@@ -845,9 +834,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 1786, month: 7, day: 1 });
-        expect(toCalendar(date, IslamicUmalquraCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ISLAMIC_UMALQURA)).toEqual(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1200,
             month: 9,
             day: 4,
@@ -859,21 +848,21 @@ describe("CalendarDate conversion", function () {
     describe("persian", function () {
       it("persian to gregorian", function () {
         const date = createCalendarDate({
-          calendar: PersianCalendar.name,
+          calendar: CALENDAR.PERSIAN,
           year: 1399,
           month: 6,
           day: 12,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 9, day: 2 })
         );
       });
 
       it("gregorian to persian", function () {
         const date = createCalendarDate({ year: 2020, month: 9, day: 2 });
-        expect(toCalendar(date, PersianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.PERSIAN)).toEqual(
           createCalendarDate({
-            calendar: PersianCalendar.name,
+            calendar: CALENDAR.PERSIAN,
             year: 1399,
             month: 6,
             day: 12,
@@ -885,33 +874,33 @@ describe("CalendarDate conversion", function () {
     describe("hebrew", function () {
       it("hebrew to gregorian", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5781,
           month: 1,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2020, month: 9, day: 19 })
         );
       });
 
       it("hebrew to gregorian in a leap year", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 6,
           day: 1,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 2022, month: 2, day: 2 })
         );
       });
 
       it("gregorian to hebrew", function () {
         const date = createCalendarDate({ year: 2020, month: 9, day: 19 });
-        expect(toCalendar(date, HebrewCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.HEBREW)).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5781,
             month: 1,
             day: 1,
@@ -921,9 +910,9 @@ describe("CalendarDate conversion", function () {
 
       it("gregorian to hebrew in a leap year", function () {
         const date = createCalendarDate({ year: 2022, month: 2, day: 2 });
-        expect(toCalendar(date, HebrewCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.HEBREW)).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 6,
             day: 1,
@@ -935,33 +924,33 @@ describe("CalendarDate conversion", function () {
     describe("ethiopic", function () {
       it("ethiopic to gregorian", function () {
         let date = createCalendarDate({
-          calendar: EthiopicCalendar.name,
+          calendar: CALENDAR.ETHIOPIC,
           era: "AA",
           year: 9999,
           month: 13,
           day: 5,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 4507, month: 9, day: 29 })
         );
 
         date = createCalendarDate({
-          calendar: EthiopicCalendar.name,
+          calendar: CALENDAR.ETHIOPIC,
           era: "AM",
           year: 9991,
           month: 13,
           day: 5,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 9999, month: 11, day: 9 })
         );
       });
 
       it("gregorian to ethioaa", function () {
         let date = createCalendarDate({ year: 4507, month: 9, day: 29 });
-        expect(toCalendar(date, EthiopicCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ETHIOPIC)).toEqual(
           createCalendarDate({
-            calendar: EthiopicCalendar.name,
+            calendar: CALENDAR.ETHIOPIC,
             era: "AM",
             year: 4499,
             month: 13,
@@ -970,9 +959,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ year: 1, month: 9, day: 29 });
-        expect(toCalendar(date, EthiopicCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ETHIOPIC)).toEqual(
           createCalendarDate({
-            calendar: EthiopicCalendar.name,
+            calendar: CALENDAR.ETHIOPIC,
             era: "AA",
             year: 5494,
             month: 2,
@@ -981,9 +970,9 @@ describe("CalendarDate conversion", function () {
         );
 
         date = createCalendarDate({ era: "BC", year: 1200, month: 9, day: 29 });
-        expect(toCalendar(date, EthiopicCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ETHIOPIC)).toEqual(
           createCalendarDate({
-            calendar: EthiopicCalendar.name,
+            calendar: CALENDAR.ETHIOPIC,
             era: "AA",
             year: 4294,
             month: 2,
@@ -996,21 +985,21 @@ describe("CalendarDate conversion", function () {
     describe("ethioaa", function () {
       it("ethioaa to gregorian", function () {
         const date = createCalendarDate({
-          calendar: EthiopicAmeteAlemCalendar.name,
+          calendar: CALENDAR.ETHIOPIC_AMETE_ALEM,
           year: 9999,
           month: 13,
           day: 5,
         });
-        expect(toCalendar(date, GregorianCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
           createCalendarDate({ year: 4507, month: 9, day: 29 })
         );
       });
 
       it("gregorian to ethioaa", function () {
         const date = createCalendarDate({ year: 4507, month: 9, day: 29 });
-        expect(toCalendar(date, EthiopicAmeteAlemCalendar.name)).toEqual(
+        expect(toCalendar(date, CALENDAR.ETHIOPIC_AMETE_ALEM)).toEqual(
           createCalendarDate({
-            calendar: EthiopicAmeteAlemCalendar.name,
+            calendar: CALENDAR.ETHIOPIC_AMETE_ALEM,
             year: 9999,
             month: 13,
             day: 5,
@@ -1038,7 +1027,7 @@ describe("CalendarDate conversion", function () {
 
     it("should preserve calendar", function () {
       const dateTime = createCalendarDateTime({
-        calendar: TaiwanCalendar.name,
+        calendar: CALENDAR.TAIWAN,
         year: 1912,
         month: 2,
         day: 3,
@@ -1049,7 +1038,7 @@ describe("CalendarDate conversion", function () {
       });
       expect(toCalendarDate(dateTime)).toEqual(
         createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           year: 1912,
           month: 2,
           day: 3,
@@ -1068,14 +1057,14 @@ describe("CalendarDate conversion", function () {
 
     it("should preserve calendar", function () {
       const date = createCalendarDate({
-        calendar: TaiwanCalendar.name,
+        calendar: CALENDAR.TAIWAN,
         year: 1912,
         month: 2,
         day: 3,
       });
       expect(toCalendarDateTime(date)).toEqual(
         createCalendarDateTime({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           year: 1912,
           month: 2,
           day: 3,
@@ -1119,7 +1108,7 @@ describe("CalendarDate conversion", function () {
 
     it("should combine a CalendarDate with a Time and preserve calendar", function () {
       const date = createCalendarDate({
-        calendar: TaiwanCalendar.name,
+        calendar: CALENDAR.TAIWAN,
         year: 1912,
         month: 2,
         day: 3,
@@ -1132,7 +1121,7 @@ describe("CalendarDate conversion", function () {
       });
       expect(toCalendarDateTime(date, time)).toEqual(
         createCalendarDateTime({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           year: 1912,
           month: 2,
           day: 3,

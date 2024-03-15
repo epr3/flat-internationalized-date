@@ -16,6 +16,7 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { GregorianCalendar } from "./GregorianCalendar";
+import { CALENDAR } from "./enum";
 
 const ETHIOPIC_EPOCH = 1723856;
 const COPTIC_EPOCH = 1824665;
@@ -73,7 +74,7 @@ function getDaysInMonth(year: number, month: number) {
  */
 export const EthiopicCalendar = {
   ...GregorianCalendar,
-  name: "ethiopic",
+  name: CALENDAR.ETHIOPIC,
   fromJulianDay(jd: number): CalendarDate {
     // eslint-disable-next-line prefer-const
     let [year, month, day] = julianDayToCE(ETHIOPIC_EPOCH, jd);
@@ -83,7 +84,13 @@ export const EthiopicCalendar = {
       year += AMETE_MIHRET_DELTA;
     }
 
-    return createCalendarDate({ calendar: "ethiopic", era, year, month, day });
+    return createCalendarDate({
+      calendar: CALENDAR.ETHIOPIC,
+      era,
+      year,
+      month,
+      day,
+    });
   },
 
   toJulianDay(date: AnyCalendarDate) {
@@ -125,13 +132,13 @@ export const EthiopicCalendar = {
  */
 export const EthiopicAmeteAlemCalendar = {
   ...EthiopicCalendar,
-  name: "ethioaa", // also known as 'ethiopic-amete-alem' in ICU
+  name: CALENDAR.ETHIOPIC_AMETE_ALEM, // also known as 'ethiopic-amete-alem' in ICU
   fromJulianDay(jd: number): CalendarDate {
     // eslint-disable-next-line prefer-const
     let [year, month, day] = julianDayToCE(ETHIOPIC_EPOCH, jd);
     year += AMETE_MIHRET_DELTA;
     return createCalendarDate({
-      calendar: "ethioaa",
+      calendar: CALENDAR.ETHIOPIC_AMETE_ALEM,
       era: "AA",
       year,
       month,
@@ -156,7 +163,7 @@ export const EthiopicAmeteAlemCalendar = {
  */
 export const CopticCalendar = {
   ...EthiopicCalendar,
-  name: "coptic",
+  name: CALENDAR.COPTIC,
   fromJulianDay(jd: number): CalendarDate {
     // eslint-disable-next-line prefer-const
     let [year, month, day] = julianDayToCE(COPTIC_EPOCH, jd);
@@ -166,7 +173,13 @@ export const CopticCalendar = {
       year = 1 - year;
     }
 
-    return createCalendarDate({ calendar: "coptic", era, year, month, day });
+    return createCalendarDate({
+      calendar: CALENDAR.COPTIC,
+      era,
+      year,
+      month,
+      day,
+    });
   },
 
   toJulianDay(date: AnyCalendarDate) {
@@ -194,7 +207,7 @@ export const CopticCalendar = {
   balanceDate(date: AnyCalendarDate) {
     let newDate = { ...date };
     if (newDate.year <= 0) {
-      newDate =  {
+      newDate = {
         ...newDate,
         year: 1 - newDate.year,
         era: newDate.era === "BCE" ? "CE" : "BCE",

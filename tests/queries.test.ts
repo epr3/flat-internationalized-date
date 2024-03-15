@@ -11,10 +11,10 @@
  */
 
 import {
+  CALENDAR,
   endOfMonth,
   endOfWeek,
   endOfYear,
-  EthiopicCalendar,
   getDayOfWeek,
   getMinimumDayInMonth,
   getMinimumMonthInYear,
@@ -22,11 +22,9 @@ import {
   isEqualDay,
   isEqualMonth,
   isEqualYear,
-  IslamicUmalquraCalendar,
   isSameDay,
   isSameMonth,
   isSameYear,
-  JapaneseCalendar,
   maxDate,
   minDate,
   startOfMonth,
@@ -78,7 +76,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 4, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -88,7 +86,7 @@ describe("queries", function () {
       expect(
         isSameDay(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -100,7 +98,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2019, month: 4, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -111,7 +109,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 4, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1441,
             month: 9,
             day: 4,
@@ -122,7 +120,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 5, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -133,7 +131,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 4, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 10,
             day: 4,
@@ -144,7 +142,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 4, day: 17 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 4,
@@ -155,7 +153,7 @@ describe("queries", function () {
         isSameDay(
           createCalendarDate({ year: 2021, month: 4, day: 16 }),
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 1442,
             month: 9,
             day: 3,
@@ -199,7 +197,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -209,7 +207,7 @@ describe("queries", function () {
     expect(
       isSameMonth(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -221,7 +219,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2019, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -232,7 +230,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1441,
           month: 9,
           day: 4,
@@ -243,7 +241,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 5, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -254,7 +252,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 10,
           day: 4,
@@ -265,7 +263,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 4, day: 17 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -276,7 +274,7 @@ describe("queries", function () {
       isSameMonth(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 3,
@@ -289,14 +287,14 @@ describe("queries", function () {
     expect(
       isSameMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
           day: 3,
         }),
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -307,7 +305,7 @@ describe("queries", function () {
     expect(
       isSameMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -352,7 +350,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -362,7 +360,7 @@ describe("isSameYear", function () {
     expect(
       isSameYear(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -374,7 +372,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2019, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -385,7 +383,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1441,
           month: 9,
           day: 4,
@@ -396,7 +394,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 5, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -407,7 +405,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 10,
           day: 4,
@@ -418,7 +416,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 4, day: 17 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -429,7 +427,7 @@ describe("isSameYear", function () {
       isSameYear(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 3,
@@ -442,14 +440,14 @@ describe("isSameYear", function () {
     expect(
       isSameYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
           day: 3,
         }),
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -460,7 +458,7 @@ describe("isSameYear", function () {
     expect(
       isSameYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -505,7 +503,7 @@ describe("isEqualDay", function () {
       isEqualDay(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -515,7 +513,7 @@ describe("isEqualDay", function () {
     expect(
       isEqualDay(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -559,7 +557,7 @@ describe("isEqualMonth", function () {
       isEqualMonth(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -569,7 +567,7 @@ describe("isEqualMonth", function () {
     expect(
       isEqualMonth(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -583,14 +581,14 @@ describe("isEqualMonth", function () {
     expect(
       isEqualMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
           day: 3,
         }),
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -601,7 +599,7 @@ describe("isEqualMonth", function () {
     expect(
       isEqualMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -646,7 +644,7 @@ describe("isEqualYear", function () {
       isEqualYear(
         createCalendarDate({ year: 2021, month: 4, day: 16 }),
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -656,7 +654,7 @@ describe("isEqualYear", function () {
     expect(
       isEqualYear(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -670,14 +668,14 @@ describe("isEqualYear", function () {
     expect(
       isEqualYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
           day: 3,
         }),
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -688,7 +686,7 @@ describe("isEqualYear", function () {
     expect(
       isEqualYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -708,7 +706,7 @@ describe("startOfMonth", function () {
     expect(
       startOfMonth(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -716,7 +714,7 @@ describe("startOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: IslamicUmalquraCalendar.name,
+        calendar: CALENDAR.ISLAMIC_UMALQURA,
         year: 1442,
         month: 9,
         day: 1,
@@ -728,7 +726,7 @@ describe("startOfMonth", function () {
     expect(
       startOfMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -737,7 +735,7 @@ describe("startOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "showa",
         year: 64,
         month: 1,
@@ -747,7 +745,7 @@ describe("startOfMonth", function () {
     expect(
       startOfMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -756,7 +754,7 @@ describe("startOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "showa",
         year: 64,
         month: 1,
@@ -802,7 +800,7 @@ describe("endOfMonth", function () {
     expect(
       endOfMonth(
         createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 1442,
           month: 9,
           day: 4,
@@ -810,7 +808,7 @@ describe("endOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: IslamicUmalquraCalendar.name,
+        calendar: CALENDAR.ISLAMIC_UMALQURA,
         year: 1442,
         month: 9,
         day: 30,
@@ -822,7 +820,7 @@ describe("endOfMonth", function () {
     expect(
       endOfMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -831,7 +829,7 @@ describe("endOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "heisei",
         year: 1,
         month: 1,
@@ -841,7 +839,7 @@ describe("endOfMonth", function () {
     expect(
       endOfMonth(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -850,7 +848,7 @@ describe("endOfMonth", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "heisei",
         year: 1,
         month: 1,
@@ -899,7 +897,7 @@ describe("startOfYear", function () {
     expect(
       startOfYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -908,7 +906,7 @@ describe("startOfYear", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "showa",
         year: 64,
         month: 1,
@@ -918,7 +916,7 @@ describe("startOfYear", function () {
     expect(
       startOfYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 5,
@@ -927,7 +925,7 @@ describe("startOfYear", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "showa",
         year: 64,
         month: 1,
@@ -976,7 +974,7 @@ describe("endOfYear", function () {
     expect(
       endOfYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -985,7 +983,7 @@ describe("endOfYear", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "heisei",
         year: 1,
         month: 12,
@@ -995,7 +993,7 @@ describe("endOfYear", function () {
     expect(
       endOfYear(
         createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 5,
@@ -1004,7 +1002,7 @@ describe("endOfYear", function () {
       )
     ).toEqual(
       createCalendarDate({
-        calendar: JapaneseCalendar.name,
+        calendar: CALENDAR.JAPANESE,
         era: "heisei",
         year: 1,
         month: 12,
@@ -1128,7 +1126,7 @@ describe("getWeeksInMonth", function () {
     expect(
       getWeeksInMonth(
         createCalendarDate({
-          calendar: EthiopicCalendar.name,
+          calendar: CALENDAR.ETHIOPIC,
           year: 2013,
           month: 13,
           day: 4,

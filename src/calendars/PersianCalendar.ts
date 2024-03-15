@@ -16,6 +16,7 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { mod } from "../utils";
+import { CALENDAR } from "./enum";
 
 const PERSIAN_EPOCH = 1948321; // 622/03/19 Julian C.E.
 
@@ -49,7 +50,7 @@ function persianToJulianDay(year: number, month: number, day: number): number {
  * around the March equinox.
  */
 export const PersianCalendar = {
-  name: "persian",
+  name: CALENDAR.PERSIAN,
 
   fromJulianDay(jd: number): CalendarDate {
     const d0 = jd - persianToJulianDay(475, 1, 1);
@@ -67,7 +68,7 @@ export const PersianCalendar = {
       yDay <= 186 ? Math.ceil(yDay / 31) : Math.ceil((yDay - 6) / 31);
     const day = jd - persianToJulianDay(year, month, 1) + 1;
 
-    return createCalendarDate({ calendar: "persian", year, month, day });
+    return createCalendarDate({ calendar: CALENDAR.PERSIAN, year, month, day });
   },
 
   toJulianDay(date: AnyCalendarDate): number {

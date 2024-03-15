@@ -15,6 +15,7 @@
 
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
+import { CALENDAR } from "./enum";
 
 const CIVIL_EPOC = 1948440; // CE 622 July 16 Friday (Julian calendar) / CE 622 July 19 (Gregorian calendar)
 const ASTRONOMICAL_EPOC = 1948439; // CE 622 July 15 Thursday (Julian calendar)
@@ -38,7 +39,7 @@ function islamicToJulianDay(
   );
 }
 
-function julianDayToIslamic(calendar: string, epoch: number, jd: number) {
+function julianDayToIslamic(calendar: CALENDAR, epoch: number, jd: number) {
   const year = Math.floor((30 * (jd - epoch) + 10646) / 10631);
   const month = Math.min(
     12,
@@ -61,10 +62,10 @@ function isLeapYear(year: number): boolean {
  * Learn more about the available Islamic calendars [here](https://cldr.unicode.org/development/development-process/design-proposals/islamic-calendar-types).
  */
 export const IslamicCivilCalendar = {
-  name: "islamic-civil",
+  name: CALENDAR.ISLAMIC_CIVIL,
 
   fromJulianDay(jd: number): CalendarDate {
-    return julianDayToIslamic("islamic-civil", CIVIL_EPOC, jd);
+    return julianDayToIslamic(CALENDAR.ISLAMIC_CIVIL, CIVIL_EPOC, jd);
   },
 
   toJulianDay(date: AnyCalendarDate) {
@@ -107,10 +108,10 @@ export const IslamicCivilCalendar = {
  */
 export const IslamicTabularCalendar = {
   ...IslamicCivilCalendar,
-  name: "islamic-tbla",
+  name: CALENDAR.ISLAMIC_TABULAR,
 
   fromJulianDay(jd: number): CalendarDate {
-    return julianDayToIslamic("islamic-tbla", ASTRONOMICAL_EPOC, jd);
+    return julianDayToIslamic(CALENDAR.ISLAMIC_TABULAR, ASTRONOMICAL_EPOC, jd);
   },
 
   toJulianDay(date: AnyCalendarDate) {
@@ -170,7 +171,7 @@ function umalquraYearLength(year: number): number {
  */
 export const IslamicUmalquraCalendar = {
   ...IslamicCivilCalendar,
-  name: "islamic-umalqura",
+  name: CALENDAR.ISLAMIC_UMALQURA,
   constructCalendar() {
     if (!UMALQURA_MONTHLENGTH) {
       UMALQURA_MONTHLENGTH = new Uint16Array(
@@ -222,7 +223,7 @@ export const IslamicUmalquraCalendar = {
       }
 
       return createCalendarDate({
-        calendar: "islamic-umalqura",
+        calendar: CALENDAR.ISLAMIC_UMALQURA,
         year: y,
         month: m,
         day: days - umalquraMonthStart(y, m) + 1,

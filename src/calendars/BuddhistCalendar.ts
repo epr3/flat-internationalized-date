@@ -20,6 +20,7 @@ import {
   GregorianCalendar,
   getExtendedYear,
 } from "./GregorianCalendar";
+import { CALENDAR } from "./enum";
 
 const BUDDHIST_ERA_START = -543;
 
@@ -43,7 +44,7 @@ function fromJulianDay(jd: number): CalendarDate {
   const gregorianDate = GregorianCalendar.fromJulianDay(jd);
   const year = getExtendedYear(gregorianDate.era!, gregorianDate.year);
   return createCalendarDate({
-    calendar: "buddhist",
+    calendar: CALENDAR.BUDDHIST,
     year: year - BUDDHIST_ERA_START,
     month: gregorianDate.month,
     day: gregorianDate.day,
@@ -64,10 +65,12 @@ function getDaysInMonth(date: AnyCalendarDate): number {
 
 export const BuddhistCalendar = {
   ...GregorianCalendar,
-  name: "buddhist",
+  name: CALENDAR.BUDDHIST,
   fromJulianDay,
   toJulianDay,
   getEras,
   getDaysInMonth,
-  balanceDate(date: AnyCalendarDate) { return date; }
+  balanceDate(date: AnyCalendarDate) {
+    return date;
+  },
 } satisfies Calendar;

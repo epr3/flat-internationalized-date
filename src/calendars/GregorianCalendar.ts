@@ -16,6 +16,7 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { mod } from "../utils";
+import { CALENDAR } from "./enum";
 
 const EPOCH = 1721426; // 001/01/03 Julian C.E.
 export function gregorianToJulianDay(
@@ -148,7 +149,7 @@ function balanceDate(date: AnyCalendarDate) {
 }
 
 export const GregorianCalendar = {
-  name: "gregorian",
+  name: CALENDAR.GREGORIAN,
   fromJulianDay,
   toJulianDay,
   getDaysInMonth,

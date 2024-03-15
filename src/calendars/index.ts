@@ -16,21 +16,37 @@ import { JapaneseCalendar } from "./JapaneseCalendar";
 import { PersianCalendar } from "./PersianCalendar";
 import { TaiwanCalendar } from "./TaiwanCalendar";
 import { Calendar } from "../types";
+import { CALENDAR } from "./enum";
 
-export const calendars: Record<string, Calendar> = {
-  [GregorianCalendar.name]: GregorianCalendar,
-  [BuddhistCalendar.name]: BuddhistCalendar,
-  [HebrewCalendar.name]: HebrewCalendar,
-  [IndianCalendar.name]: IndianCalendar,
-  [CopticCalendar.name]: CopticCalendar,
-  [EthiopicCalendar.name]: EthiopicCalendar,
-  [EthiopicAmeteAlemCalendar.name]: EthiopicAmeteAlemCalendar,
-  [IslamicCivilCalendar.name]: IslamicCivilCalendar,
-  [IslamicTabularCalendar.name]: IslamicTabularCalendar,
-  [IslamicUmalquraCalendar.name]: IslamicUmalquraCalendar,
-  [JapaneseCalendar.name]: JapaneseCalendar,
-  [PersianCalendar.name]: PersianCalendar,
-  [TaiwanCalendar.name]: TaiwanCalendar,
+export const calendars: Record<CALENDAR, Calendar> = {
+  [CALENDAR.GREGORIAN]: GregorianCalendar,
+  [CALENDAR.BUDDHIST]: BuddhistCalendar,
+  [CALENDAR.HEBREW]: HebrewCalendar,
+  [CALENDAR.INDIAN]: IndianCalendar,
+  [CALENDAR.COPTIC]: CopticCalendar,
+  [CALENDAR.ETHIOPIC]: EthiopicCalendar,
+  [CALENDAR.ETHIOPIC_AMETE_ALEM]: EthiopicAmeteAlemCalendar,
+  [CALENDAR.ISLAMIC_CIVIL]: IslamicCivilCalendar,
+  [CALENDAR.ISLAMIC_TABULAR]: IslamicTabularCalendar,
+  [CALENDAR.ISLAMIC_UMALQURA]: IslamicUmalquraCalendar,
+  [CALENDAR.JAPANESE]: JapaneseCalendar,
+  [CALENDAR.PERSIAN]: PersianCalendar,
+  [CALENDAR.TAIWAN]: TaiwanCalendar,
 };
 
-export const supportedCalendars = Object.keys(calendars);
+export {
+  CALENDAR,
+  GregorianCalendar,
+  BuddhistCalendar,
+  HebrewCalendar,
+  IndianCalendar,
+  CopticCalendar,
+  EthiopicCalendar,
+  EthiopicAmeteAlemCalendar,
+  IslamicCivilCalendar,
+  IslamicTabularCalendar,
+  IslamicUmalquraCalendar,
+  JapaneseCalendar,
+  PersianCalendar,
+  TaiwanCalendar,
+};

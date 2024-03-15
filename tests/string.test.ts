@@ -19,15 +19,13 @@ import {
   parseZonedDateTime,
   temporalToString,
   toAbsoluteString,
-} from "..";
-
-import { describe, it, expect } from "vitest";
-import {
   createCalendarDate,
   createCalendarDateTime,
   createTime,
   createZonedDateTime,
-} from "../src/CalendarDate";
+} from "..";
+
+import { describe, it, expect } from "vitest";
 
 describe("string conversion", function () {
   describe("parseTime", function () {

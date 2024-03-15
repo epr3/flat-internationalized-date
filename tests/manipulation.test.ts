@@ -11,27 +11,17 @@
  */
 
 import {
-  BuddhistCalendar,
-  CopticCalendar,
-  EthiopicAmeteAlemCalendar,
-  EthiopicCalendar,
-  HebrewCalendar,
-  IndianCalendar,
-  IslamicCivilCalendar,
-  IslamicTabularCalendar,
-  IslamicUmalquraCalendar,
-  JapaneseCalendar,
-  PersianCalendar,
-  TaiwanCalendar,
-} from "..";
-
-import { describe, it, expect } from "vitest";
-import { add, cycle, set, subtract } from "../src/manipulation";
-import {
+  CALENDAR,
+  add,
+  cycle,
+  set,
+  subtract,
   createCalendarDate,
   createCalendarDateTime,
   createZonedDateTime,
-} from "../src/CalendarDate";
+} from "..";
+
+import { describe, it, expect } from "vitest";
 
 describe("CalendarDate manipulation", function () {
   describe("add", function () {
@@ -190,7 +180,7 @@ describe("CalendarDate manipulation", function () {
     describe("Japanese calendar", function () {
       it("should add years and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 4,
@@ -198,7 +188,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 2,
             month: 4,
@@ -209,7 +199,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should add months and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 4,
@@ -217,7 +207,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 1,
             month: 5,
@@ -228,7 +218,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should add days and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 4,
@@ -236,7 +226,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { days: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 1,
             month: 5,
@@ -247,7 +237,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should contstrain when reaching begining of meiji era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "meiji",
           year: 1,
           month: 10,
@@ -255,7 +245,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "meiji",
             year: 1,
             month: 9,
@@ -266,7 +256,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching 7981 reiwa", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 7981,
           month: 12,
@@ -274,7 +264,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 7981,
             month: 12,
@@ -287,7 +277,7 @@ describe("CalendarDate manipulation", function () {
     describe("Taiwan calendar", function () {
       it("should add years and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 1,
           month: 4,
@@ -295,7 +285,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "minguo",
             year: 1,
             month: 4,
@@ -306,7 +296,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should add years in before_minguo era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 3,
           month: 4,
@@ -314,7 +304,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 2,
             month: 4,
@@ -325,7 +315,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should add months and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 1,
           month: 12,
@@ -333,7 +323,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "minguo",
             year: 1,
             month: 1,
@@ -344,7 +334,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should add days and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 1,
           month: 12,
@@ -352,7 +342,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { days: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "minguo",
             year: 1,
             month: 1,
@@ -363,14 +353,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 8088", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           year: 8088,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             year: 8088,
             month: 12,
             day: 31,
@@ -380,7 +370,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 8088 before minguo", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 9999,
           month: 1,
@@ -388,7 +378,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 9999,
             month: 1,
@@ -401,14 +391,14 @@ describe("CalendarDate manipulation", function () {
     describe("Hebrew calendar", function () {
       it("should add months in a non-leap year", function () {
         let date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5781,
           month: 5,
           day: 1,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5781,
             month: 6,
             day: 1,
@@ -416,14 +406,14 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5781,
           month: 12,
           day: 1,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 1,
             day: 1,
@@ -433,14 +423,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should add months in a leap year", function () {
         let date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 5,
           day: 1,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 6,
             day: 1,
@@ -448,14 +438,14 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 12,
           day: 1,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 13,
             day: 1,
@@ -465,14 +455,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should add years in a leap year", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 13,
           day: 1,
         });
         expect(add(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5783,
             month: 12,
             day: 1,
@@ -482,14 +472,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 1", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 1,
           month: 1,
           day: 10,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 1,
             month: 1,
             day: 1,
@@ -499,14 +489,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9999", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 9999,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 9999,
             month: 12,
             day: 29,
@@ -518,14 +508,14 @@ describe("CalendarDate manipulation", function () {
     describe("IndianCalendar", function () {
       it("should constrain when reaching year 1", function () {
         const date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 1,
           month: 1,
           day: 10,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 1,
             month: 1,
             day: 1,
@@ -535,14 +525,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9919", function () {
         const date = createCalendarDate({
-          calendar: IndianCalendar.name,
+          calendar: CALENDAR.INDIAN,
           year: 9919,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: IndianCalendar.name,
+            calendar: CALENDAR.INDIAN,
             year: 9919,
             month: 12,
             day: 31,
@@ -554,14 +544,14 @@ describe("CalendarDate manipulation", function () {
     describe("PersianCalendar", function () {
       it("should constrain when reaching year 1", function () {
         const date = createCalendarDate({
-          calendar: PersianCalendar.name,
+          calendar: CALENDAR.PERSIAN,
           year: 1,
           month: 1,
           day: 10,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: PersianCalendar.name,
+            calendar: CALENDAR.PERSIAN,
             year: 1,
             month: 1,
             day: 1,
@@ -571,14 +561,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9377", function () {
         const date = createCalendarDate({
-          calendar: PersianCalendar.name,
+          calendar: CALENDAR.PERSIAN,
           year: 9377,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: PersianCalendar.name,
+            calendar: CALENDAR.PERSIAN,
             year: 9377,
             month: 12,
             day: 31,
@@ -590,14 +580,14 @@ describe("CalendarDate manipulation", function () {
     describe("BuddhistCalendar", function () {
       it("should constrain when reaching year 1", function () {
         const date = createCalendarDate({
-          calendar: BuddhistCalendar.name,
+          calendar: CALENDAR.BUDDHIST,
           year: 1,
           month: 1,
           day: 12,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: BuddhistCalendar.name,
+            calendar: CALENDAR.BUDDHIST,
             year: 1,
             month: 1,
             day: 1,
@@ -607,14 +597,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9999", function () {
         const date = createCalendarDate({
-          calendar: BuddhistCalendar.name,
+          calendar: CALENDAR.BUDDHIST,
           year: 9999,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: BuddhistCalendar.name,
+            calendar: CALENDAR.BUDDHIST,
             year: 9999,
             month: 12,
             day: 31,
@@ -626,14 +616,14 @@ describe("CalendarDate manipulation", function () {
     describe("CopticCalendar", function () {
       it("should rebalance era when subtracting", function () {
         const date = createCalendarDate({
-          calendar: CopticCalendar.name,
+          calendar: CALENDAR.COPTIC,
           year: 1,
           month: 1,
           day: 12,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: CopticCalendar.name,
+            calendar: CALENDAR.COPTIC,
             era: "BCE",
             year: 1,
             month: 13,
@@ -644,7 +634,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should rebalance era when adding", function () {
         const date = createCalendarDate({
-          calendar: CopticCalendar.name,
+          calendar: CALENDAR.COPTIC,
           era: "BCE",
           year: 1,
           month: 13,
@@ -652,7 +642,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: CopticCalendar.name,
+            calendar: CALENDAR.COPTIC,
             year: 1,
             month: 1,
             day: 5,
@@ -662,14 +652,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9715 CE", function () {
         const date = createCalendarDate({
-          calendar: CopticCalendar.name,
+          calendar: CALENDAR.COPTIC,
           year: 9715,
           month: 13,
           day: 2,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: CopticCalendar.name,
+            calendar: CALENDAR.COPTIC,
             year: 9715,
             month: 13,
             day: 6,
@@ -679,7 +669,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9999 BCE", function () {
         const date = createCalendarDate({
-          calendar: CopticCalendar.name,
+          calendar: CALENDAR.COPTIC,
           era: "BCE",
           year: 9999,
           month: 1,
@@ -687,7 +677,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: CopticCalendar.name,
+            calendar: CALENDAR.COPTIC,
             era: "BCE",
             year: 9999,
             month: 1,
@@ -700,14 +690,14 @@ describe("CalendarDate manipulation", function () {
     describe("EthiopicCalendar", function () {
       it("should constrain when reaching year 9991 AM", function () {
         const date = createCalendarDate({
-          calendar: EthiopicCalendar.name,
+          calendar: CALENDAR.ETHIOPIC,
           year: 9991,
           month: 13,
           day: 2,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: EthiopicCalendar.name,
+            calendar: CALENDAR.ETHIOPIC,
             year: 9991,
             month: 13,
             day: 6,
@@ -717,7 +707,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching year 9999 AA", function () {
         const date = createCalendarDate({
-          calendar: EthiopicCalendar.name,
+          calendar: CALENDAR.ETHIOPIC,
           era: "AA",
           year: 9999,
           month: 13,
@@ -725,7 +715,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: EthiopicCalendar.name,
+            calendar: CALENDAR.ETHIOPIC,
             era: "AA",
             year: 9999,
             month: 13,
@@ -738,7 +728,7 @@ describe("CalendarDate manipulation", function () {
     describe("EthiopicAmeteAlemCalendar", function () {
       it("should constrain when reaching year 9999 AA", function () {
         const date = createCalendarDate({
-          calendar: EthiopicAmeteAlemCalendar.name,
+          calendar: CALENDAR.ETHIOPIC_AMETE_ALEM,
           era: "AA",
           year: 9999,
           month: 13,
@@ -746,7 +736,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: EthiopicAmeteAlemCalendar.name,
+            calendar: CALENDAR.ETHIOPIC_AMETE_ALEM,
             era: "AA",
             year: 9999,
             month: 13,
@@ -759,14 +749,14 @@ describe("CalendarDate manipulation", function () {
     describe("IslamicCivilCalendar", function () {
       it("should constrain when reaching year 9995", function () {
         const date = createCalendarDate({
-          calendar: IslamicCivilCalendar.name,
+          calendar: CALENDAR.ISLAMIC_CIVIL,
           year: 9995,
           month: 12,
           day: 2,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: IslamicCivilCalendar.name,
+            calendar: CALENDAR.ISLAMIC_CIVIL,
             year: 9995,
             month: 12,
             day: 30,
@@ -778,14 +768,14 @@ describe("CalendarDate manipulation", function () {
     describe("IslamicTabularCalendar", function () {
       it("should constrain when reaching year 9995", function () {
         const date = createCalendarDate({
-          calendar: IslamicTabularCalendar.name,
+          calendar: CALENDAR.ISLAMIC_TABULAR,
           year: 9995,
           month: 12,
           day: 2,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: IslamicTabularCalendar.name,
+            calendar: CALENDAR.ISLAMIC_TABULAR,
             year: 9995,
             month: 12,
             day: 30,
@@ -797,14 +787,14 @@ describe("CalendarDate manipulation", function () {
     describe("IslamicUmalquraCalendar", function () {
       it("should constrain when reaching year 9995", function () {
         const date = createCalendarDate({
-          calendar: IslamicUmalquraCalendar.name,
+          calendar: CALENDAR.ISLAMIC_UMALQURA,
           year: 9995,
           month: 12,
           day: 2,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: IslamicUmalquraCalendar.name,
+            calendar: CALENDAR.ISLAMIC_UMALQURA,
             year: 9995,
             month: 12,
             day: 30,
@@ -945,7 +935,7 @@ describe("CalendarDate manipulation", function () {
     describe("Japanese calendar", function () {
       it("should subtract years and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 1,
           month: 5,
@@ -953,7 +943,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 30,
             month: 5,
@@ -964,7 +954,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract months and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 1,
           month: 5,
@@ -972,7 +962,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -983,7 +973,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract days and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 1,
           month: 5,
@@ -991,7 +981,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { days: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -1002,7 +992,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain when reaching the minimum supported era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "meiji",
           year: 1,
           month: 9,
@@ -1010,7 +1000,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "meiji",
             year: 1,
             month: 9,
@@ -1019,7 +1009,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "meiji",
           year: 1,
           month: 9,
@@ -1027,7 +1017,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "meiji",
             year: 1,
             month: 9,
@@ -1040,7 +1030,7 @@ describe("CalendarDate manipulation", function () {
     describe("Taiwan calendar", function () {
       it("should subtract years and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "minguo",
           year: 1,
           month: 4,
@@ -1048,7 +1038,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1,
             month: 4,
@@ -1059,7 +1049,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract years in before_minguo era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 2,
           month: 4,
@@ -1067,7 +1057,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 3,
             month: 4,
@@ -1078,7 +1068,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract months and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "minguo",
           year: 1,
           month: 1,
@@ -1086,7 +1076,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1,
             month: 12,
@@ -1097,7 +1087,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract days and rebalance era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "minguo",
           year: 1,
           month: 1,
@@ -1105,7 +1095,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(subtract(date, { days: 1 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1,
             month: 12,
@@ -1118,14 +1108,14 @@ describe("CalendarDate manipulation", function () {
     describe("Hebrew calendar", function () {
       it("should subtract months in a non-leap year", function () {
         let date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5781,
           month: 6,
           day: 1,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5781,
             month: 5,
             day: 1,
@@ -1133,14 +1123,14 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 1,
           day: 1,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5781,
             month: 12,
             day: 1,
@@ -1150,14 +1140,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract months in a leap year", function () {
         let date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 6,
           day: 1,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 5,
             day: 1,
@@ -1165,14 +1155,14 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 13,
           day: 1,
         });
         expect(subtract(date, { months: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5782,
             month: 12,
             day: 1,
@@ -1182,14 +1172,14 @@ describe("CalendarDate manipulation", function () {
 
       it("should subtract years in a leap year", function () {
         const date = createCalendarDate({
-          calendar: HebrewCalendar.name,
+          calendar: CALENDAR.HEBREW,
           year: 5782,
           month: 13,
           day: 1,
         });
         expect(subtract(date, { years: 1 })).toEqual(
           createCalendarDate({
-            calendar: HebrewCalendar.name,
+            calendar: CALENDAR.HEBREW,
             year: 5781,
             month: 12,
             day: 1,
@@ -1257,7 +1247,7 @@ describe("CalendarDate manipulation", function () {
     describe("Japanese calendar", function () {
       it("should constrain date in era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 30,
           month: 4,
@@ -1265,7 +1255,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { year: 35 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -1274,7 +1264,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 63,
           month: 1,
@@ -1282,7 +1272,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { year: 72 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 64,
             month: 1,
@@ -1291,7 +1281,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 3,
@@ -1299,7 +1289,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { month: 5 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -1308,7 +1298,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 1,
           month: 12,
@@ -1316,7 +1306,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { month: 5 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 1,
             month: 12,
@@ -1325,7 +1315,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -1333,7 +1323,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { day: 8 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 64,
             month: 1,
@@ -1342,7 +1332,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 1,
           month: 12,
@@ -1350,7 +1340,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { day: 5 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 1,
             month: 12,
@@ -1359,7 +1349,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "reiwa",
           year: 1,
           month: 12,
@@ -1367,7 +1357,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { year: 1, month: 1, day: 1 })).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 1,
             month: 5,
@@ -1380,7 +1370,7 @@ describe("CalendarDate manipulation", function () {
     describe("Taiwan calendar", function () {
       it("should constrain year in era", function () {
         const date = createCalendarDate({
-          calendar: TaiwanCalendar.name,
+          calendar: CALENDAR.TAIWAN,
           era: "before_minguo",
           year: 5,
           month: 4,
@@ -1388,7 +1378,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(set(date, { year: -2 })).toEqual(
           createCalendarDate({
-            calendar: TaiwanCalendar.name,
+            calendar: CALENDAR.TAIWAN,
             era: "before_minguo",
             year: 1,
             month: 4,
@@ -1403,7 +1393,7 @@ describe("CalendarDate manipulation", function () {
     describe("era", function () {
       it("should cycle the era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 10,
           month: 4,
@@ -1411,7 +1401,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "era", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 10,
             month: 4,
@@ -1420,7 +1410,7 @@ describe("CalendarDate manipulation", function () {
         );
         expect(cycle(date, "era", -1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 10,
             month: 4,
@@ -1429,7 +1419,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 10,
           month: 4,
@@ -1437,7 +1427,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "era", 2)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 10,
             month: 4,
@@ -1446,7 +1436,7 @@ describe("CalendarDate manipulation", function () {
         );
         expect(cycle(date, "era", 3)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "meiji",
             year: 10,
             month: 4,
@@ -1457,7 +1447,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should constrain the date within the era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 63,
           month: 1,
@@ -1465,7 +1455,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "era", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 1,
@@ -1474,7 +1464,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 63,
           month: 7,
@@ -1482,7 +1472,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "era", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 31,
             month: 4,
@@ -1545,7 +1535,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should adjust the era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 4,
@@ -1553,7 +1543,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "month", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 1,
             month: 5,
@@ -1562,7 +1552,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 31,
           month: 1,
@@ -1570,7 +1560,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "month", -1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "reiwa",
             year: 1,
             month: 12,
@@ -1579,7 +1569,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 1,
           month: 12,
@@ -1587,7 +1577,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "month", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "taisho",
             year: 15,
             month: 1,
@@ -1596,7 +1586,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -1604,7 +1594,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "month", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 1,
             month: 2,
@@ -1613,7 +1603,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 2,
@@ -1621,7 +1611,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "month", -1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 64,
             month: 1,
@@ -1660,7 +1650,7 @@ describe("CalendarDate manipulation", function () {
 
       it("should adjust the era", function () {
         let date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 64,
           month: 1,
@@ -1668,7 +1658,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "day", 1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "heisei",
             year: 1,
             month: 1,
@@ -1677,7 +1667,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "heisei",
           year: 1,
           month: 1,
@@ -1685,7 +1675,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "day", -1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "showa",
             year: 64,
             month: 1,
@@ -1694,7 +1684,7 @@ describe("CalendarDate manipulation", function () {
         );
 
         date = createCalendarDate({
-          calendar: JapaneseCalendar.name,
+          calendar: CALENDAR.JAPANESE,
           era: "showa",
           year: 1,
           month: 12,
@@ -1702,7 +1692,7 @@ describe("CalendarDate manipulation", function () {
         });
         expect(cycle(date, "day", -1)).toEqual(
           createCalendarDate({
-            calendar: JapaneseCalendar.name,
+            calendar: CALENDAR.JAPANESE,
             era: "taisho",
             year: 15,
             month: 12,

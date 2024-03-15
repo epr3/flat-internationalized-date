@@ -20,6 +20,7 @@ import {
   getExtendedYear,
   GregorianCalendar,
 } from "./GregorianCalendar";
+import { CALENDAR } from "./enum";
 
 const TAIWAN_ERA_START = 1911;
 
@@ -55,14 +56,14 @@ function toGregorian(date: AnyCalendarDate) {
  */
 export const TaiwanCalendar = {
   ...GregorianCalendar,
-  name: "roc", // Republic of China
+  name: CALENDAR.TAIWAN, // Republic of China
 
   fromJulianDay(jd: number): CalendarDate {
     const date = GregorianCalendar.fromJulianDay(jd);
     const extendedYear = getExtendedYear(date.era!, date.year);
     const [era, year] = gregorianToTaiwan(extendedYear);
     return createCalendarDate({
-      calendar: "roc",
+      calendar: CALENDAR.TAIWAN,
       era,
       year,
       month: date.month,

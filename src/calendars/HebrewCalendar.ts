@@ -16,6 +16,7 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { mod } from "../utils";
+import { CALENDAR } from "./enum";
 
 const HEBREW_EPOCH = 347997;
 
@@ -134,7 +135,7 @@ function getDaysInMonth(year: number, month: number): number {
  * In leap years, an extra month is inserted at month 6.
  */
 export const HebrewCalendar = {
-  name: "hebrew",
+  name: CALENDAR.HEBREW,
 
   fromJulianDay(jd: number): CalendarDate {
     const d = jd - HEBREW_EPOCH;
@@ -162,7 +163,7 @@ export const HebrewCalendar = {
     monthStart -= getDaysInMonth(year, month);
 
     const day = dayOfYear - monthStart;
-    return createCalendarDate({ calendar: "hebrew", year, month, day });
+    return createCalendarDate({ calendar: CALENDAR.HEBREW, year, month, day });
   },
 
   toJulianDay(date: AnyCalendarDate) {

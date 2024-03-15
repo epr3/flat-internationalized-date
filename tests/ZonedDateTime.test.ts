@@ -10,10 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { toZoned } from "../src";
 import { describe, it, expect } from "vitest";
-import { createCalendarDateTime } from "../src/CalendarDate";
-import { add, cycle, set, subtract } from "../src/manipulation";
+import { createCalendarDateTime, add, cycle, set, subtract, toZoned } from "..";
 
 describe("ZonedDateTime", function () {
   describe("add", function () {

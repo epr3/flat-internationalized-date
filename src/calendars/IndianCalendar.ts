@@ -21,6 +21,7 @@ import {
   gregorianToJulianDay,
   isLeapYear,
 } from "./GregorianCalendar";
+import { CALENDAR } from "./enum";
 
 // Starts in 78 AD,
 const INDIAN_ERA_START = 78;
@@ -35,7 +36,7 @@ const INDIAN_YEAR_START = 80;
  */
 export const IndianCalendar = {
   ...GregorianCalendar,
-  name: "indian",
+  name: CALENDAR.INDIAN,
 
   fromJulianDay(jd: number): CalendarDate {
     // Gregorian date for Julian day
@@ -79,7 +80,7 @@ export const IndianCalendar = {
     }
 
     return createCalendarDate({
-      calendar: "indian",
+      calendar: CALENDAR.INDIAN,
       year: indianYear,
       month: indianMonth,
       day: indianDay,
@@ -136,5 +137,7 @@ export const IndianCalendar = {
     return ["saka"];
   },
 
-  balanceDate(date: AnyCalendarDate) {return date}
+  balanceDate(date: AnyCalendarDate) {
+    return date;
+  },
 } satisfies Calendar;

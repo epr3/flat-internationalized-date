@@ -16,6 +16,7 @@
 import { AnyCalendarDate, Calendar } from "../types";
 import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { GregorianCalendar } from "./GregorianCalendar";
+import { CALENDAR } from "./enum";
 
 const ERA_START_DATES = [
   [1868, 9, 8],
@@ -92,16 +93,19 @@ function constrainDate(date: AnyCalendarDate) {
     // Constrain the year to the maximum possible value in the era.
     // Then constrain the month and day fields within that.
     const maxYear = endYear - ERA_ADDENDS[idx];
-    newDate = { ...newDate,
+    newDate = {
+      ...newDate,
       year: Math.max(1, Math.min(maxYear, newDate.year)),
     };
     if (newDate.year === maxYear) {
-      newDate =  {...newDate,
+      newDate = {
+        ...newDate,
         month: Math.max(1, Math.min(endMonth, newDate.month)),
       };
 
       if (newDate.month === endMonth) {
-        newDate = { ...newDate,
+        newDate = {
+          ...newDate,
           day: Math.max(1, Math.min(endDay, newDate.day)),
         };
       }
@@ -110,14 +114,10 @@ function constrainDate(date: AnyCalendarDate) {
 
   if (date.year === 1 && idx >= 0) {
     const [, startMonth, startDay] = ERA_START_DATES[idx];
-    newDate = { ...newDate,
-      month: Math.max(startMonth, newDate.month),
-    };
+    newDate = { ...newDate, month: Math.max(startMonth, newDate.month) };
 
     if (newDate.month === startMonth) {
-      newDate = { ...newDate,
-        day: Math.max(startDay, newDate.day),
-      };
+      newDate = { ...newDate, day: Math.max(startDay, newDate.day) };
     }
   }
 
@@ -131,14 +131,14 @@ function constrainDate(date: AnyCalendarDate) {
  */
 export const JapaneseCalendar: Calendar = {
   ...GregorianCalendar,
-  name: "japanese",
+  name: CALENDAR.JAPANESE,
 
   fromJulianDay(jd: number): CalendarDate {
     const date = GregorianCalendar.fromJulianDay(jd);
     const era = findEraFromGregorianDate(date);
 
     return createCalendarDate({
-      calendar: "japanese",
+      calendar: CALENDAR.JAPANESE,
       era: ERA_NAMES[era],
       year: date.year - ERA_ADDENDS[era],
       month: date.month,
@@ -156,7 +156,8 @@ export const JapaneseCalendar: Calendar = {
     const era = findEraFromGregorianDate(gregorianDate);
 
     if (ERA_NAMES[era] !== date.era) {
-      newDate = { ...newDate,
+      newDate = {
+        ...newDate,
         era: ERA_NAMES[era],
         year: gregorianDate.year - ERA_ADDENDS[era],
       };
