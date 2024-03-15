@@ -30,11 +30,12 @@ import {
   startOfMonth,
   startOfWeek,
   startOfYear,
+  createCalendarDate,
+  createZonedDateTime,
+  compare,
 } from "..";
 
 import { describe, it, expect } from "vitest";
-import { createCalendarDate, createZonedDateTime } from "../src/CalendarDate";
-import { compare } from "../src/queries";
 
 describe("queries", function () {
   describe("isSameDay", function () {

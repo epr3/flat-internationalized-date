@@ -36,7 +36,11 @@ import {
   getExtendedYear,
   GregorianCalendar,
 } from "./calendars/GregorianCalendar";
-import { getLocalTimeZone, isZonedDateTime } from "./queries";
+import {
+  getLocalTimeZone,
+  isCalendarDateTime,
+  isZonedDateTime,
+} from "./queries";
 import { CALENDAR, calendars } from "./calendars";
 
 export function epochFromDate(date: AnyDateTime) {
@@ -238,7 +242,7 @@ export function toAbsolute(
 }
 
 export function toDate(
-  dateTime: CalendarDate | CalendarDateTime | ZonedDateTime,
+  dateTime: AnyCalendarDate,
   timezone: string,
   disambiguation: Disambiguation = "compatible"
 ): Date {
@@ -320,14 +324,14 @@ export function toTimeFields(date: AnyTime): TimeFields {
  * of the resulting value, otherwise it will default to midnight.
  */
 export function toCalendarDateTime(
-  date: CalendarDate | CalendarDateTime | ZonedDateTime,
+  date: AnyCalendarDate,
   time?: AnyTime
 ): CalendarDateTime {
   const hour = 0,
     minute = 0,
     second = 0,
     millisecond = 0;
-  if ("timezone" in date) {
+  if (isZonedDateTime(date)) {
     const { hour, minute, second, millisecond } = date;
     return createCalendarDateTime({
       calendar: date.calendar,
@@ -340,7 +344,7 @@ export function toCalendarDateTime(
       second,
       millisecond,
     });
-  } else if ("hour" in date && !time) {
+  } else if (isCalendarDateTime(date) && !time) {
     return date;
   }
 
@@ -413,7 +417,7 @@ export function toCalendar<T extends AnyCalendarDate>(
  * to control how values that fall on daylight saving time changes are interpreted.
  */
 export function toZoned(
-  date: CalendarDate | CalendarDateTime | ZonedDateTime,
+  date: AnyCalendarDate,
   timezone: string,
   disambiguation?: Disambiguation
 ): ZonedDateTime {

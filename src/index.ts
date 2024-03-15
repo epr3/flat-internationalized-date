@@ -81,6 +81,7 @@ export {
   maxDate,
   isWeekend,
   isWeekday,
+  compare,
   type DateValue,
 } from "./queries";
 
