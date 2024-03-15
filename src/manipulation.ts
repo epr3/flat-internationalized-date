@@ -245,7 +245,10 @@ function constrainMonthDay(date: AnyCalendarDate): AnyCalendarDate {
 
 export function constrain(date: AnyCalendarDate): AnyCalendarDate {
   let newDate = { ...date };
-  if (Object.hasOwn(calendars[newDate.calendar], "constrainDate")) {
+  if (
+    calendars[newDate.calendar] &&
+    Object.hasOwn(calendars[newDate.calendar], "constrainDate")
+  ) {
     newDate = {
       ...newDate,
       ...calendars[newDate.calendar].constrainDate!(newDate),
