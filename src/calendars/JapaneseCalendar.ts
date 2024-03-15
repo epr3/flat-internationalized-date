@@ -86,7 +86,7 @@ function constrainDate(date: AnyCalendarDate) {
   let newDate = { ...date };
   const idx = ERA_NAMES.indexOf(date.era!);
   const end = ERA_END_DATES[idx];
-  console.log(idx);
+
   if (end) {
     const [endYear, endMonth, endDay] = end;
 
