@@ -344,32 +344,29 @@ export function cycle(
 
 export function set(
   date: CalendarDateTime,
-  fields: DateFields
+  fields: DateFields | TimeFields
 ): CalendarDateTime;
 export function set(
   date: ZonedDateTime,
-  fields: DateFields & TimeFields,
+  fields: DateFields | TimeFields,
   disambiguation?: Disambiguation
 ): ZonedDateTime;
 export function set(date: CalendarDate, fields: DateFields): CalendarDate;
 export function set(
   date: CalendarDate | CalendarDateTime | ZonedDateTime,
-  fields: DateFields & TimeFields,
+  fields: DateFields | TimeFields,
   disambiguation?: Disambiguation
 ): CalendarDate | CalendarDateTime | ZonedDateTime {
   if (isZonedDateTime(date)) {
     return setZoned(date, fields, disambiguation);
   }
 
-  let mutableDate: CalendarDate | CalendarDateTime = {
+  let mutableDate: CalendarDate | CalendarDateTime | ZonedDateTime = {
     ...date,
-    year: fields.year ?? date.year,
-    month: fields.month ?? date.month,
-    day: fields.day ?? date.day,
-    era: fields.era ?? date.era,
+    ...setDate(date, fields as DateFields),
   };
 
-  if (isCalendarDateTime(mutableDate)) {
+  if (isCalendarDateTime(mutableDate) || isZonedDateTime(mutableDate)) {
     mutableDate = {
       ...mutableDate,
       ...setTime(mutableDate, fields as TimeFields),
@@ -379,12 +376,29 @@ export function set(
   return constrain(mutableDate);
 }
 
+export function setDate(
+  value: CalendarDate | CalendarDateTime | ZonedDateTime,
+  fields: DateFields
+): CalendarDate | CalendarDateTime | ZonedDateTime {
+  const mutableValue = {
+    ...value,
+    year: fields.year ?? value.year,
+    month: fields.month ?? value.month,
+    day: fields.day ?? value.day,
+  };
+
+  return { ...constrain(mutableValue) };
+}
+
 export function setTime(
-  value: CalendarDateTime,
+  value: CalendarDateTime | ZonedDateTime,
   fields: TimeFields
-): CalendarDateTime;
+): CalendarDateTime | ZonedDateTime;
 export function setTime(value: Time, fields: TimeFields): Time;
-export function setTime(value: Time | CalendarDateTime, fields: TimeFields) {
+export function setTime(
+  value: Time | CalendarDateTime | ZonedDateTime,
+  fields: TimeFields
+) {
   const mutableValue = {
     ...value,
     hour: fields.hour ?? value.hour,
