@@ -20,7 +20,7 @@ const addedDate = add(date, { days: 1 })
 console.log(temporalToString(addedDate))
 ```
 
-More information about most of the package functionality can be checked (here)[https://react-spectrum.adobe.com/internationalized/date/index.html].
+More information about most of the package functionality can be checked [here](https://react-spectrum.adobe.com/internationalized/date/index.html).
 
 ## API
 ### Create dates/times
@@ -203,7 +203,7 @@ getWeeksInMonth(date, 'fr-FR'); // 5
 
 ### DateFormatter
 
-`DateFormatter` is a wrapper around the native Intl.DateTimeFormat API. It exposes the same API, but works around several browser bugs and provides polyfills for newer features. More details (here)[https://react-spectrum.adobe.com/internationalized/date/DateFormatter.html]
+`DateFormatter` is a wrapper around the native Intl.DateTimeFormat API. It exposes the same API, but works around several browser bugs and provides polyfills for newer features. More details [here](https://react-spectrum.adobe.com/internationalized/date/DateFormatter.html)
 
 ## Development
 
