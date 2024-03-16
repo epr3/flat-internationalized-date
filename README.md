@@ -73,17 +73,19 @@ const setDate = set(date, { year: 2025 }) // sets the year to 2025
 ```
 ### Conversion
 
-| Function  | Arguments | Output Type | Description |
-| **toCalendarDate** | (`AnyCalendarDate`) | `CalendarDate` | Converts object to `CalendarDate` |
-| **toCalendarDateTime** | (`AnyCalendarDate`, `AnyTime`?) | `CalendarDateTime` | Converts object to `CalendarDateTime` |
-| **toTime** | (`CalendarDateTime` or `ZonedDateTime`) | `Time` | Extracts time from object |
-| **toCalendar** | (`AnyCalendarDate`, `CALENDAR`) | `AnyCalendarDate` | Converts calendar to another |
-| **toZoned** | (`AnyCalendarDate`, `string`, `Disambiguation`? ) | `ZonedDateTime`| Converts a date value to a `ZonedDateTime` in the provided time zone. The `disambiguation` option can be set to control how values that fall on daylight saving time changes are interpreted. |
-| **toTimeZone** | (`ZonedDateTime`, `string`) | `ZonedDateTime` | Converts a `ZonedDateTime` from one time zone to another. |
-| **toLocalTimeZone** | (`ZonedDateTime`) | `ZonedDateTime` | Converts the given `ZonedDateTime` into the user's local time zone. |
-| **fromDate** | (`Date`, `string`) | `ZonedDateTime` | Takes a `Date` object and converts it to the provided time zone |
-| **fromAbsolute** | (`number`, `string`) | `ZonedDateTime` | Takes a Unix epoch (milliseconds since 1970) and converts it to the provided time zone. |
-| **toDate** | (`AnyCalendarDate`, `string`, `Disambiguation`) | `Date` | Converts a calendar date to the native `Date` |
+| Function               | Arguments                                      | Output Type        | Description                                                                                                                                                                                   |
+|------------------------|------------------------------------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **toCalendarDate**     | `AnyCalendarDate`                              | `CalendarDate`     | Converts object to `CalendarDate`                                                                                                                                                             |
+| **toCalendarDateTime** | `AnyCalendarDate`, `AnyTime`?                  | `CalendarDateTime` | Converts object to `CalendarDateTime`                                                                                                                                                         |
+| **toTime**             | `CalendarDateTime` or `ZonedDateTime`          | `Time`             | Extracts time from object                                                                                                                                                                     |
+| **toCalendar**         | `AnyCalendarDate`, `CALENDAR`                  | `AnyCalendarDate`  | Converts calendar to another                                                                                                                                                                  |
+| **toZoned**            | `AnyCalendarDate`, `string`, `Disambiguation`? | `ZonedDateTime`    | Converts a date value to a `ZonedDateTime` in the provided time zone. The `disambiguation` option can be set to control how values that fall on daylight saving time changes are interpreted. |
+| **toTimeZone**         | `ZonedDateTime`, `string`                      | `ZonedDateTime`    | Converts a `ZonedDateTime` from one time zone to another.                                                                                                                                     |
+| **toLocalTimeZone**    | `ZonedDateTime`                                | `ZonedDateTime`    | Converts the given `ZonedDateTime` into the user's local time zone.                                                                                                                           |
+| **fromDate**           | `Date`, `string`                               | `ZonedDateTime`    | Takes a `Date` object and converts it to the provided time zone                                                                                                                               |
+| **fromAbsolute**       | `number`, `string`                             | `ZonedDateTime`    | Takes a Unix epoch (milliseconds since 1970) and converts it to the provided time zone.                                                                                                       |
+| **toDate**             | `AnyCalendarDate`, `string`, `Disambiguation`  | `Date`             | Converts a calendar date to the native `Date`                                                                                                                                                 |
+
 
 ### Queries
 
