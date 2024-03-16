@@ -106,10 +106,10 @@ compare(b, a) > 0; // true
 
 In addition, the following functions can be used to perform a partial comparison. These functions accept dates in different calendar systems, and the second date is converted to the calendar system of the first date before comparison.
 
-`isSameYear` – Returns whether the given dates occur in the same year, using the calendar system of the first date.
-`isSameMonth` – Returns whether the given dates occur in the same month, using the calendar system of the first date.
-`isSameDay` – Returns whether the given dates occur on the same day, regardless of the time or calendar system.
-`isToday` – Returns whether the date is today in the given time zone.
+* `isSameYear` – Returns whether the given dates occur in the same year, using the calendar system of the first date.
+* `isSameMonth` – Returns whether the given dates occur in the same month, using the calendar system of the first date.
+* `isSameDay` – Returns whether the given dates occur on the same day, regardless of the time or calendar system.
+* `isToday` – Returns whether the date is today in the given time zone.
 
 ```js
 import { CALENDAR, isSameMonth, createCalendarDate } from 'flat-internationalized-date';
@@ -124,9 +124,9 @@ isSameMonth(
 ```
 A similar set of functions is also available that does not convert between calendar systems and requires the calendars to be equal.
 
-`isEqualYear` – Returns whether the given dates occur in the same year, and are of the same calendar system.
-`isEqualMonth` – Returns whether the given dates occur in the same month, and are of the same calendar system.
-`isEqualDay` – Returns whether the given dates occur on the same day, and are of the same calendar system.
+* `isEqualYear` – Returns whether the given dates occur in the same year, and are of the same calendar system.
+* `isEqualMonth` – Returns whether the given dates occur in the same month, and are of the same calendar system.
+* `isEqualDay` – Returns whether the given dates occur on the same day, and are of the same calendar system.
 
 ```js
 import { isEqualMonth, CALENDAR, createCalendarDate } from 'flat-internationalized-date';
@@ -142,12 +142,12 @@ isEqualMonth(
 #### Start and end dates
 The following functions can be used to find the start or end dates of a particular unit of time.
 
-`startOfYear` – Returns the first day of the year for the given date.
-`endOfYear` – Returns the last day of the year for the given date.
-`startOfMonth` – Returns the first date of the month for the given date.
-`endOfMonth` – Returns the last date of the month for the given date.
-`startOfWeek` – Returns the first date of the week for the given date and locale.
-`endOfWeek` – Returns the last date of the week for the given date and locale.
+* `startOfYear` – Returns the first day of the year for the given date.
+* `endOfYear` – Returns the last day of the year for the given date.
+* `startOfMonth` – Returns the first date of the month for the given date.
+* `endOfMonth` – Returns the last date of the month for the given date.
+* `startOfWeek` – Returns the first date of the week for the given date and locale.
+* `endOfWeek` – Returns the last date of the week for the given date and locale.
 
 Note that `startOfWeek` and `endOfWeek` require a locale string to be provided. This is because the first day of the week changes depending on the locale. For example, in the United States, the first day of the week is on Sunday, but in France it is on Monday.
 
