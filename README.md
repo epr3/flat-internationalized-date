@@ -60,7 +60,7 @@ export enum CALENDAR {
 ```
 
 ### Manipulation
-Every manipulation function returns a new object. The available manipulations functions are: `add`, `subtract`, `cycle` and `set.
+Every manipulation function returns a new object. The available manipulations functions are: `add`, `subtract`, `cycle` and `set`.
 
 ```js
 import { createCalendarDate, add, subtract, cycle, set } from "flat-internationalized-date";
