@@ -858,6 +858,18 @@ describe("CalendarDate conversion", function () {
         );
       });
 
+      it("persian to gregorian for months greater than 6", function () {
+        const date = createCalendarDate({
+          calendar: CALENDAR.PERSIAN,
+          year: 1403,
+          month: 12,
+          day: 1,
+        });
+        expect(toCalendar(date, CALENDAR.GREGORIAN)).toEqual(
+          createCalendarDate({ year: 2025, month: 2, day: 19 })
+        );
+      });
+
       it("gregorian to persian", function () {
         const date = createCalendarDate({ year: 2020, month: 9, day: 2 });
         expect(toCalendar(date, CALENDAR.PERSIAN)).toEqual(
@@ -866,6 +878,18 @@ describe("CalendarDate conversion", function () {
             year: 1399,
             month: 6,
             day: 12,
+          })
+        );
+      });
+
+      it("gregorian to persian for months lower than 6", function () {
+        const date = createCalendarDate({ year: 2025, month: 3, day: 21 });
+        expect(toCalendar(date, CALENDAR.PERSIAN)).toEqual(
+          createCalendarDate({
+            calendar: CALENDAR.PERSIAN,
+            year: 1404,
+            month: 1,
+            day: 2,
           })
         );
       });

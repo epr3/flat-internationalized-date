@@ -18,6 +18,10 @@ import { CalendarDate, createCalendarDate } from "../CalendarDate";
 import { mod } from "../utils";
 import { CALENDAR } from "./enum";
 
+function julianDayRounder(jd: number) {
+  return Math.floor(jd) + (jd - Math.floor(jd) >= 0.5 ? 0.5 : -0.5);
+}
+
 const PERSIAN_EPOCH = 1948320.5; // 622/03/19 Julian C.E.
 
 function isLeapYear(year: number): boolean {
@@ -27,20 +31,21 @@ function isLeapYear(year: number): boolean {
 }
 
 function persianToJulianDay(year: number, month: number, day: number): number {
-  const y0 = year > 0 ? year - 474 : year - 473;
-  const y1 = mod(y0, 2820) + 474;
+  const epochBase = year >= 0 ? year - 474 : year - 473;
+  const epochYear = mod(epochBase, 2820) + 474;
+
   const offset = month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6;
 
-  return (
-    PERSIAN_EPOCH -
-    1 +
-    1029983 * Math.floor(y0 / 2820) +
-    Math.floor((y1 * 682 - 110) / 2816) +
-    365 * (y1 - 1) +
-    Math.floor((31 * y1 - 5) / 128) +
+  const julianDay =
+    day +
     offset +
-    day
-  );
+    Math.floor((682 * epochYear - 110) / 2816) +
+    (epochYear - 1) * 365 +
+    Math.floor(epochBase / 2820) * 1029983 +
+    PERSIAN_EPOCH -
+    1;
+
+  return Math.floor(julianDay) + Math.round(julianDay - Math.floor(julianDay));
 }
 
 /**
@@ -53,32 +58,39 @@ export const PersianCalendar = {
   name: CALENDAR.PERSIAN,
 
   fromJulianDay(jd: number): CalendarDate {
-    let aux1, aux2;
-    const d0 = jd - persianToJulianDay(475, 1, 1);
-    const n2820 = Math.floor(d0 / 1029983);
-    const d1 = mod(d0, 1029983);
-    let y2820;
+    const julianDay = Math.floor(julianDayRounder(jd + 0.5)) + 0.5;
+    const depoch = julianDay - julianDayRounder(persianToJulianDay(475, 1, 1));
+    const cycle = Math.floor(depoch / 1029983);
+    const cyear = mod(depoch, 1029983);
+    let ycycle, aux1, aux2;
 
-    if (d1 === 1029982) {
-      y2820 = 2820;
+    if (cyear === 1029982) {
+      ycycle = 2820;
     } else {
-      aux1 = Math.floor(d1 / 366);
-      aux2 = mod(d1, 366);
-      y2820 =
+      aux1 = Math.floor(cyear / 366);
+      aux2 = mod(cyear, 366);
+      ycycle =
         Math.floor((2134 * aux1 + 2816 * aux2 + 2815) / 1028522) + aux1 + 1;
     }
 
-    let year = 474 + 2820 * n2820 + y2820;
+    let year = ycycle + 2820 * cycle + 474;
     if (year <= 0) {
       year--;
     }
 
-    const yDay = jd - persianToJulianDay(year, 1, 1) + 1;
+    const yday =
+      julianDay - julianDayRounder(persianToJulianDay(year, 1, 1)) + 1;
     const month =
-      yDay <= 186 ? Math.ceil(yDay / 31) : Math.ceil((yDay - 6) / 30);
-    const day = jd - persianToJulianDay(year, month, 1) + 1;
+      yday <= 186 ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30);
+    const day =
+      julianDay - julianDayRounder(persianToJulianDay(year, month, 1));
 
-    return createCalendarDate({ calendar: CALENDAR.PERSIAN, year, month, day });
+    return createCalendarDate({
+      calendar: CALENDAR.PERSIAN,
+      year,
+      month,
+      day,
+    });
   },
 
   toJulianDay(date: AnyCalendarDate): number {
@@ -95,7 +107,7 @@ export const PersianCalendar = {
     ];
 
     if (date.month < 1 || date.month > 12) {
-      throw new Error("$month Out Of Range Exception");
+      throw new Error("Month is out of range");
     }
 
     if (date.year && isLeapYear(date.year) && date.month === 12) {
