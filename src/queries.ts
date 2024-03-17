@@ -26,7 +26,7 @@ import {
 } from "./conversion";
 import { weekStartData } from "./weekStartData";
 import { add, subtract } from "./manipulation";
-import { calendars } from "./calendars/index";
+import { CALENDAR, calendars } from "./calendars";
 
 export type DateValue = CalendarDate | CalendarDateTime | ZonedDateTime;
 
@@ -117,7 +117,11 @@ export function now(timeZone: string): ZonedDateTime {
 }
 
 /** Returns today's date in the given time zone. */
-export function today(timeZone: string): CalendarDate {
+export function today(timeZone: string, calendar?: CALENDAR): CalendarDate {
+  if (calendar) {
+    return toCalendar(toCalendarDate(now(timeZone)), calendar);
+  }
+
   return toCalendarDate(now(timeZone));
 }
 
