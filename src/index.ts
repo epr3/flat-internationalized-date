@@ -86,6 +86,7 @@ export {
   isZonedDateTime,
   isCalendarDate,
   isCalendarDateTime,
+  getDaysInMonth,
 } from "./queries";
 
 export {
