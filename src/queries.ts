@@ -405,3 +405,12 @@ export function isTime(date: object): date is Time {
     !isCalendarDate(date)
   );
 }
+
+/** Returns the days in the month for a given date. */
+export function getDaysInMonth(date: ZonedDateTime): number;
+export function getDaysInMonth(date: CalendarDateTime): number;
+export function getDaysInMonth(date: CalendarDate): number;
+export function getDaysInMonth(date: DateValue): number;
+export function getDaysInMonth(date: DateValue): number {
+  return calendars[date.calendar].getDaysInMonth(date);
+}
