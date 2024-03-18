@@ -106,7 +106,7 @@ export function createZonedDateTime({
   second?: number;
   millisecond?: number;
   timezone: string;
-  offset?: number;
+  offset: number;
 }): ZonedDateTime {
   return {
     ...constrain({
@@ -122,7 +122,7 @@ export function createZonedDateTime({
         millisecond,
       }),
       timezone,
-      offset: offset ?? 0,
+      offset,
     }),
   } as ZonedDateTime;
 }
