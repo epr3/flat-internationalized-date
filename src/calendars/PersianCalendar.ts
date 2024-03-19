@@ -145,20 +145,6 @@ function jalaaliMonthLength(jy: number, jm: number) {
   return 29;
 }
 
-// /*
-//   Checks whether a Jalaali date is valid or not.
-// */
-// function isValidJalaaliDate(jy: number, jm: number, jd: number) {
-//   return (
-//     jy >= -61 &&
-//     jy <= 3177 &&
-//     jm >= 1 &&
-//     jm <= 12 &&
-//     jd >= 1 &&
-//     jd <= jalaaliMonthLength(jy, jm)
-//   );
-// }
-
 /*
   Is this a leap year or not?
 */
@@ -262,36 +248,6 @@ function d2j(jdn: number) {
   jd = mod(k, 30) + 1;
   return { jy: jy, jm: jm, jd: jd };
 }
-
-// function julianDayRounder(jd: number) {
-//   return Math.floor(jd) + (jd - Math.floor(jd) >= 0.5 ? 0.5 : -0.5);
-// }
-
-// const PERSIAN_EPOCH = 1948320.5; // 622/03/19 Julian C.E.
-
-// function isLeapYear(year: number): boolean {
-//   return (
-//     ((((year - (year > 0 ? 474 : 473)) % 2820) + 474 + 38) * 682) % 2816 < 682
-//   );
-// }
-
-// function persianToJulianDay(year: number, month: number, day: number): number {
-//   const epochBase = year >= 0 ? year - 474 : year - 473;
-//   const epochYear = mod(epochBase, 2820) + 474;
-
-//   const offset = month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6;
-
-//   const julianDay =
-//     day +
-//     offset +
-//     Math.floor((682 * epochYear - 110) / 2816) +
-//     (epochYear - 1) * 365 +
-//     Math.floor(epochBase / 2820) * 1029983 +
-//     PERSIAN_EPOCH -
-//     1;
-
-//   return Math.floor(julianDay) + Math.round(julianDay - Math.floor(julianDay));
-// }
 
 /**
  * The Persian calendar is the main calendar used in Iran and Afghanistan. It has 12 months
