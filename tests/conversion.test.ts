@@ -889,7 +889,7 @@ describe("CalendarDate conversion", function () {
             calendar: CALENDAR.PERSIAN,
             year: 1404,
             month: 1,
-            day: 2,
+            day: 1,
           })
         );
       });

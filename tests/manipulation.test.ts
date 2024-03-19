@@ -559,17 +559,17 @@ describe("CalendarDate manipulation", function () {
         );
       });
 
-      it("should constrain when reaching year 9377", function () {
+      it("should constrain when reaching year 3177", function () {
         const date = createCalendarDate({
           calendar: CALENDAR.PERSIAN,
-          year: 9377,
+          year: 3178,
           month: 12,
           day: 10,
         });
         expect(add(date, { months: 1 })).toEqual(
           createCalendarDate({
             calendar: CALENDAR.PERSIAN,
-            year: 9377,
+            year: 3178,
             month: 12,
             day: 31,
           })
