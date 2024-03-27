@@ -1,3 +1,7 @@
+# DEPRECATED
+
+
+
 # Flat Internationalized Date
 
 This library is a fork of [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/%40internationalized/date) by Adobe.
